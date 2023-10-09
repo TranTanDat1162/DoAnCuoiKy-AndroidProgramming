@@ -25,15 +25,11 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
-        bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
+        addControl();
+        addEvent();
+    }
 
-        imageView = findViewById(R.id.imageView);
-        app_name = findViewById(R.id.textView);
-
-        imageView.setAnimation(topAnim);
-        app_name.setAnimation(bottomAnim);
-
+    private void addEvent() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -46,5 +42,16 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(i,options.toBundle());
             }
         }, 3000);
+    }
+
+    private void addControl() {
+        topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
+        bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
+
+        imageView = findViewById(R.id.imageView);
+        app_name = findViewById(R.id.textView);
+
+        imageView.setAnimation(topAnim);
+        app_name.setAnimation(bottomAnim);
     }
 }

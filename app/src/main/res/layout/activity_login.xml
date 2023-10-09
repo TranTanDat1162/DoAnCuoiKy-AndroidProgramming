@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/shape"
         android:layout_width="wrap_content"
-        android:layout_height="141dp"
+        android:layout_height="wrap_content"
         android:src="@drawable/shape" />
 
     <TextView
@@ -87,6 +87,7 @@
             android:text="No account?"/>
 
         <TextView
+            android:id="@+id/tvSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/signup"
