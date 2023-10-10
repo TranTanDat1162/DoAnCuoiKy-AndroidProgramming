@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextView tvSignUp;
+    TextView tvSignUp, tvUsername, tvPassword;
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +34,41 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = tvUsername.getText().toString();
+                String password = tvPassword.getText().toString();
+
+                if (!username.equals("tandat"))
+                {
+                    Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+                    btnLogin.setBackgroundResource(R.drawable.login_fail);
+                    btnLogin.startAnimation(anim);
+                    Toast.makeText(LoginActivity.this, "Wrong username", Toast.LENGTH_LONG).show();
+                }
+                else if (!password.equals("11062002"))
+                {
+                    Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+                    btnLogin.setBackgroundResource(R.drawable.login_fail);
+                    btnLogin.startAnimation(anim);
+                    Toast.makeText(LoginActivity.this, "Wrong password", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+                    btnLogin.setBackgroundResource(R.drawable.login_success);
+                    btnLogin.startAnimation(anim);
+                    Toast.makeText(LoginActivity.this, "Login successfully", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void addControl() {
         tvSignUp = findViewById(R.id.tvSignUp);
+        tvUsername = findViewById(R.id.tvUsername);
+        tvPassword = findViewById(R.id.tvPassword);
+        btnLogin = findViewById(R.id.btnLogin);
     }
 }
