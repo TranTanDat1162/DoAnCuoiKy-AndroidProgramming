@@ -1,5 +1,7 @@
 package edu.uef.doan;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -31,10 +33,11 @@ public class AssignmentTab extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    public ListView lv;
+    private ListView lv;
     View parentholder;
-    String[]assignmentsName={"English lab 04","Math 02","Union's history Group assignment"};
-    String[]assignmentsDetail={"Do this before tomorrow","Revise this every 2 week","These will appear in the finals exam"};
+    String[]assignmentsName={"Lab04","Lab05","Lab06","Lab04","Lab05","Lab06"};
+    String[]assignmentsDetail={"Ngay giao 10/11/2023 \nNgay nop...","Ngay giao ... \nNgay nop: 55//555adawdwa","Ngay giao ... \nNgay nop awdawrasdww","Ngay giao 10/11/2023 \nNgay nop...","Ngay giao ... \nNgay nop: 55//555adawdwa","Ngay giao ... \nNgay nop awdawrasdww"};
+    Integer[]bgColor={0,1,2,0,1,2};
     List<RowItem> rowItems;
     public AssignmentTab() {
         // Required empty public constructor
@@ -73,11 +76,11 @@ public class AssignmentTab extends Fragment {
                              Bundle savedInstanceState) {
         parentholder = inflater.inflate(R.layout.fragment_assignment_tab, container, false);
 
-        lv = (ListView) parentholder.findViewById(R.id.listViewMain);
+        lv = (ListView) parentholder.findViewById(R.id.ListViewAssignment);
 
         rowItems = new ArrayList<RowItem>();
         for (int i = 0; i < assignmentsName.length; i++) {
-            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i]);
+            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
             rowItems.add(item);
         }
         ArrayAdapter<RowItem> mAdapter =

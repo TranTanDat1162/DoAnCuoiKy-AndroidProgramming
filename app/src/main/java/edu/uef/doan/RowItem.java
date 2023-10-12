@@ -1,14 +1,16 @@
 package edu.uef.doan;
 
 public class RowItem {
-    private int imageId;
     private String title;
     private String desc;
-
-    public RowItem(String title, String desc) {
+    private int bgcolors;
+    public RowItem(String title, String desc,int bgcolors) {
         this.title = title;
         this.desc = desc;
+        this.bgcolors = bgcolors;
     }
+    public int getBgcolors() { return bgcolors; }
+    public void setBgcolors(int bgcolors) { this.bgcolors = bgcolors; }
     public String getDesc() {
         return desc;
     }

@@ -68,7 +68,7 @@
                         android:id="@+id/assignmenttab"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#FFC0CB"
+                        android:background="@drawable/appbackground"
                         android:orientation="vertical">
 
                         <com.google.android.material.tabs.TabLayout
