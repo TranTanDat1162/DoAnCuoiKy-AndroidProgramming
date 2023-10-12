@@ -47,18 +47,23 @@ public class SignupActivity extends AppCompatActivity {
                 String password = etPassword.getText().toString();
                 String confirmpassword = etConfirmPassword.getText().toString();
 
-                if (!password.equals(confirmpassword))
-                {
+                if (!password.equals(confirmpassword)) {
                     Toast.makeText(SignupActivity.this, "Passwords do not match together", Toast.LENGTH_LONG).show();
-                }
+                } else {
+                    // Kiểm tra xem tên tài khoản đã tồn tại hay chưa
+                    User existingUser = dbHelper.getUserByUsername(username);
 
-                else {
-                    Toast.makeText(SignupActivity.this, "Sign up successfully!!!", Toast.LENGTH_LONG).show();
-                    User user = new User(username, password);
-                    dbHelper.addUser(user);
+                    if (existingUser != null) {
+                        Toast.makeText(SignupActivity.this, "Username already exists", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(SignupActivity.this, "Sign up successfully!!!", Toast.LENGTH_LONG).show();
+                        User user = new User(username, password);
+                        dbHelper.addUser(user);
+                    }
                 }
             }
         });
+
     }
 
     private void addControl() {
