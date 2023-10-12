@@ -64,78 +64,69 @@
                     android:layout_height="568dp">
 
                     <!-- for tab 1 -->
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/assignmenttab"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/appbackground"
-                        android:orientation="vertical">
+                        android:background="@drawable/appbackground">
 
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/assignmenttab_layout"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <com.google.android.material.tabs.TabItem
-                                android:text="test"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
+                                android:layout_height="match_parent"
+                                android:text="test" />
 
                             <com.google.android.material.tabs.TabItem
-                                android:text="test2"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
+                                android:layout_height="match_parent"
+                                android:text="test2" />
 
                         </com.google.android.material.tabs.TabLayout>
 
                         <androidx.viewpager.widget.ViewPager
                             android:id="@+id/submitted_pager"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1">
+                            android:layout_height="match_parent"
+                            android:layout_below="@id/assignmenttab_layout">
 
                         </androidx.viewpager.widget.ViewPager>
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/floatingActionButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|right">
-
-                            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                                android:id="@+id/floatingActionButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="4dp"
-                                android:layout_marginBottom="4dp"
-                                android:backgroundTint="#9CD3FF"
-                                android:clickable="true"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:srcCompat="@drawable/addassignmenticon"
-                                app:tint="#0019A3"
-                                tools:foregroundGravity="right" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="@dimen/fab_margin"
+                            android:layout_marginTop="@dimen/fab_margin"
+                            android:layout_marginEnd="@dimen/fab_margin"
+                            android:layout_marginBottom="@dimen/fab_margin"
+                            android:backgroundTint="#9CD3FF"
+                            android:clickable="true"
+                            app:srcCompat="@drawable/addassignmenticon"
+                            app:tint="#0019A3"
+                            tools:foregroundGravity="right" />
 
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <!-- for tab 2 -->
                     <LinearLayout
                         android:id="@+id/activitytab"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#90ee90"
+                        android:background="@drawable/appbackground"
                         android:orientation="vertical">
 
-                        <!-- Text View for applying the text to the tab -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="270dp"
-                            android:text="This is Tab 2"
-                            android:textColor="#000"
-                            android:textSize="32sp" />
+                        <FrameLayout
+                            android:id="@+id/history_fragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        </FrameLayout>
                     </LinearLayout>
 
                 </FrameLayout>

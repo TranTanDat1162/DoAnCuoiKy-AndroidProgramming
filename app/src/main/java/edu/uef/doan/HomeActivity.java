@@ -1,6 +1,7 @@
 package edu.uef.doan;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -49,6 +50,13 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.assignmenttab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
+        // Begin the transaction
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Replace the contents of the container with the new fragment
+        ft.replace(R.id.history_fragment, new HistoryFragment());
+        // or ft.add(R.id.your_placeholder, new FooFragment());
+        // Complete the changes added above
+        ft.commit();
         // onclick listener for user details
         userDetails = (ImageButton) findViewById(R.id.userDetail);
         userDetails.setOnClickListener(new View.OnClickListener(){
