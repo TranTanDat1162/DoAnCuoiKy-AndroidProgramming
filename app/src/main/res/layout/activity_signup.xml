@@ -34,6 +34,7 @@
             android:transitionName="splash_image" />
 
         <EditText
+            android:id="@+id/etUsername"
             android:layout_width="360dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -44,6 +45,7 @@
             android:background="@drawable/input"/>
 
         <EditText
+            android:id="@+id/etPassword"
             android:layout_width="360dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -54,6 +56,7 @@
             android:background="@drawable/input"/>
 
         <EditText
+            android:id="@+id/etConfirmPassword"
             android:layout_width="360dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -65,6 +68,7 @@
 
 
         <Button
+            android:id="@+id/btnSignup"
             android:layout_width="360dp"
             android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
