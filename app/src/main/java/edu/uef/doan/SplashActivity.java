@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this,LoginActivity.class);
+                Intent i = new Intent(SplashActivity.this,CreateActivity.class);
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair(imageView, "splash_image");
                 pairs[1] = new Pair(imageView, "splash_text");
