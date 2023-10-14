@@ -66,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                         Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
                         btnLogin.setBackgroundResource(R.drawable.login_success);
                         btnLogin.startAnimation(anim);
-                        Toast.makeText(LoginActivity.this, "Login successfully", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+//                        Toast.makeText(LoginActivity.this, "Login successfully", Toast.LENGTH_LONG).show();
                     }
                 }
             }
