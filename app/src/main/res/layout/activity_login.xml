@@ -34,6 +34,7 @@
         android:transitionName="splash_image" />
 
     <EditText
+        android:id="@+id/tvUsername"
         android:layout_width="360dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
@@ -44,6 +45,7 @@
         android:background="@drawable/input"/>
 
     <EditText
+        android:id="@+id/tvPassword"
         android:layout_width="360dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
@@ -63,15 +65,15 @@
         android:textStyle="bold"
         android:textColor="@color/forgotpassword"/>
 
-
     <Button
+        android:id="@+id/btnLogin"
         android:layout_width="360dp"
         android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
         android:background="@drawable/login_btn"
         app:backgroundTint="@null"
-        android:text="LOG IN" />
+        android:text="LOG IN"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
