@@ -74,13 +74,11 @@
             <!--            android:src="@drawable/ic_attachment" />-->
 
             <ImageButton
-                android:id="@+id/attachmentButton4"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/attachmentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

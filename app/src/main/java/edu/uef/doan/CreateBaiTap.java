@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 public class CreateBaiTap extends AppCompatActivity {
@@ -21,9 +22,7 @@ public class CreateBaiTap extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(CreateBaiTap.this,"Tao bai thanh cong " ,Toast.LENGTH_SHORT).show();
-
-                Intent intent=new Intent(CreateBaiTap.this,HistoryFragment.class);
+                Intent intent = new Intent(CreateBaiTap.this, HomeActivity.class);
                 startActivity(intent);
             }
         });
