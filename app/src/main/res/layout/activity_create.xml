@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F0F3F4"
+    android:background="#F0F4F3"
     tools:context=".CreateActivity"
     tools:visibility="visible">
 
@@ -256,6 +256,30 @@
                 android:text="OK" />
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        >
+
+        <ImageButton
+            android:id="@+id/attachmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_attachment" />
+
+        <TextView
+            android:id="@+id/attachmentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="Đính kèm file"
+            android:visibility="visible" />
+    </LinearLayout>
 
 
 </LinearLayout>
+
+
+

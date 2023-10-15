@@ -2,8 +2,18 @@ package edu.uef.doan;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,7 +26,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +51,22 @@ public class CreateActivity extends AppCompatActivity {
 
     private List<String> tags;
     private ArrayAdapter<String> tagAdapter;
+    private static final int PICK_FILES_REQUEST_CODE = 2;
+
+
+
+
+    private Uri selectedFUri;
+    private ImageButton attachmentButton;
+    private TextView attachmentTextView;
+    private String getMimeType(String filePath) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +100,9 @@ public class CreateActivity extends AppCompatActivity {
         tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tagSpinner.setAdapter(tagAdapter);
 
+        attachmentButton = findViewById(R.id.attachmentButton);
+        attachmentTextView = findViewById(R.id.attachmentTextView);
+        attachmentButton.setOnClickListener(v -> openFilePicker());
 
         // Bắt sự kiện khi chọn một mục từ Spinner
         tagSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -213,7 +246,105 @@ public class CreateActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+        attachmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFilePicker();
 
+            }
+        });
+        attachmentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Lấy đường dẫn đầy đủ của tệp tin từ TextView
+                String filePath = attachmentTextView.getText().toString().trim();
+
+                // Kiểm tra xem tệp tin có tồn tại không trước khi mở nó
+                File file = new File(filePath);
+                if (file.exists()) {
+                    // Mở tệp tin sử dụng Intent
+                    Intent openFileIntent = new Intent(Intent.ACTION_VIEW);
+                    openFileIntent.setDataAndType(Uri.fromFile(file), getMimeType(filePath));
+                    openFileIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        startActivity(openFileIntent);
+                    } catch (ActivityNotFoundException e) {
+                        // Xử lý trường hợp không tìm thấy ứng dụng để mở tệp tin
+                        e.printStackTrace();
+                        Toast.makeText(CreateActivity.this, "Không thể mở tệp tin.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(CreateActivity.this, "Không tìm thấy tệp tin.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });    }
+
+
+    private void openFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều tệp tin
+        startActivityForResult(intent, PICK_FILES_REQUEST_CODE);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_FILES_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            ClipData clipData = data.getClipData();
+            if (clipData != null) {
+                StringBuilder selectedFiles = new StringBuilder();
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    Uri fileUri = clipData.getItemAt(i).getUri();
+                    String fileName = getFileName(fileUri);
+                    selectedFiles.append(fileName).append("\n"); // Dùng "\n" để ngăn cách giữa các tên tệp tin
+                }
+                // Hiển thị danh sách các tệp tin đã chọn
+                attachmentTextView.setText("Tệp đính kèm:\n" + selectedFiles.toString().trim());
+                attachmentTextView.setVisibility(View.VISIBLE);
+            } else {
+                Uri fileUri = data.getData();
+                String fileName = getFileName(fileUri);
+                // Hiển thị tên tệp tin đã chọn
+                attachmentTextView.setText("Tệp đính kèm:\n" + fileName);
+                attachmentTextView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+    private String getFileName(Uri uri) {
+        String result = null;
+        String scheme = uri.getScheme();
+
+        if (scheme != null && scheme.equals("content")) {
+            ContentResolver contentResolver = getContentResolver();
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex != -1) {
+                        result = cursor.getString(displayNameIndex);
+                    }
+                }
+                cursor.close();
+            }
+        }
+
+        if (result == null) {
+            DocumentFile documentFile = DocumentFile.fromSingleUri(this, uri);
+            if (documentFile != null) {
+                result = documentFile.getName();
+            }
+        }
+
+        if (result == null) {
+            // Fallback: Lấy tên file từ đường dẫn URI
+            result = uri.getLastPathSegment();
+        }
+
+        return result;
+    }
+
 }
 
