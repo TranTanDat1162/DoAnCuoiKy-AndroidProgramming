@@ -78,13 +78,6 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="167dp"
-        android:layout_height="148dp"
-        android:layout_marginBottom="10dp"
-        android:src="@tools:sample/avatars" />
-
     <TextView
         android:id="@+id/textView8"
         android:layout_width="match_parent"

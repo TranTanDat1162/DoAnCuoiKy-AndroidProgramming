@@ -5,29 +5,38 @@ import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
@@ -36,6 +45,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 
@@ -51,14 +63,14 @@ public class CreateActivity extends AppCompatActivity {
 
     private List<String> tags;
     private ArrayAdapter<String> tagAdapter;
-    private static final int PICK_FILES_REQUEST_CODE = 2;
-
-
+    private static final int PICK_FILES_REQUEST_CODE = 1;
+    private static final int OPEN_FILE_REQUEST_CODE = 2;
 
 
     private Uri selectedFUri;
     private ImageButton attachmentButton;
     private TextView attachmentTextView;
+
     private String getMimeType(String filePath) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
@@ -67,6 +79,10 @@ public class CreateActivity extends AppCompatActivity {
         }
         return type;
     }
+
+    private List<Uri> selectedFiles = new ArrayList<>(); // Danh sách các tệp đã chọn
+    private List<String> selectedFileNames = new ArrayList<>(); // Danh sách các tên tệp đã chọn
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,46 +262,23 @@ public class CreateActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+
         attachmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFilePicker();
-
             }
         });
-        attachmentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lấy đường dẫn đầy đủ của tệp tin từ TextView
-                String filePath = attachmentTextView.getText().toString().trim();
-
-                // Kiểm tra xem tệp tin có tồn tại không trước khi mở nó
-                File file = new File(filePath);
-                if (file.exists()) {
-                    // Mở tệp tin sử dụng Intent
-                    Intent openFileIntent = new Intent(Intent.ACTION_VIEW);
-                    openFileIntent.setDataAndType(Uri.fromFile(file), getMimeType(filePath));
-                    openFileIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    try {
-                        startActivity(openFileIntent);
-                    } catch (ActivityNotFoundException e) {
-                        // Xử lý trường hợp không tìm thấy ứng dụng để mở tệp tin
-                        e.printStackTrace();
-                        Toast.makeText(CreateActivity.this, "Không thể mở tệp tin.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(CreateActivity.this, "Không tìm thấy tệp tin.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });    }
+    }
 
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều tệp tin
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều tệp
         startActivityForResult(intent, PICK_FILES_REQUEST_CODE);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -294,57 +287,171 @@ public class CreateActivity extends AppCompatActivity {
         if (requestCode == PICK_FILES_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
-                StringBuilder selectedFiles = new StringBuilder();
+                // Nếu người dùng chọn nhiều tệp
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri fileUri = clipData.getItemAt(i).getUri();
-                    String fileName = getFileName(fileUri);
-                    selectedFiles.append(fileName).append("\n"); // Dùng "\n" để ngăn cách giữa các tên tệp tin
+                    selectedFiles.add(fileUri);
+                    selectedFileNames.add(getFileName(fileUri));
                 }
-                // Hiển thị danh sách các tệp tin đã chọn
-                attachmentTextView.setText("Tệp đính kèm:\n" + selectedFiles.toString().trim());
+                // Hiển thị số lượng tệp đã chọn
+                attachmentTextView.setText("Đã chọn " + selectedFiles.size() + " tệp");
                 attachmentTextView.setVisibility(View.VISIBLE);
-            } else {
+            } else if (data.getData() != null) {
+                // Nếu người dùng chỉ chọn một tệp
                 Uri fileUri = data.getData();
+                selectedFiles.add(fileUri);
                 String fileName = getFileName(fileUri);
-                // Hiển thị tên tệp tin đã chọn
-                attachmentTextView.setText("Tệp đính kèm:\n" + fileName);
+                selectedFileNames.add(fileName);
+                // Hiển thị tên tệp đã chọn và thực hiện animation
+                attachmentTextView.setText(fileName);
                 attachmentTextView.setVisibility(View.VISIBLE);
             }
         }
+
+        // Xử lý khi người dùng nhấp vào TextView để kiểm tra danh sách các tệp đã chọn
+
+
+        attachmentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSelectedFileList();
+            }
+        });
     }
+
+    private void showSelectedFileList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Danh sách các tệp đã chọn");
+
+        View selectedFilesView = getLayoutInflater().inflate(R.layout.selected_files_list, null);
+        ListView selectedFilesListView = selectedFilesView.findViewById(R.id.selectedFilesListView);
+
+        SelectedFilesAdapter adapter = new SelectedFilesAdapter(this, selectedFileNames, selectedFiles);
+        selectedFilesListView.setAdapter(adapter);
+
+        builder.setView(selectedFilesView);
+        builder.setPositiveButton("Xử lý", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Xử lý khi người dùng ấn nút "Xử lý"
+                // Thêm mã xử lý ở đây
+            }
+        });
+
+        builder.show();
+    }
+
+
+    // Cập nhật TextView sau khi xóa tệp khỏi danh sách
+    private void updateAttachmentTextView() {
+        if (selectedFileNames.isEmpty()) {
+            attachmentTextView.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
+            attachmentTextView.setVisibility(View.INVISIBLE);
+        } else {
+            attachmentTextView.setText("Đã chọn " + selectedFileNames.size() + " tệp");
+        }
+    }
+
+
+    // Phương thức để lấy tên tệp từ Uri
     private String getFileName(Uri uri) {
         String result = null;
-        String scheme = uri.getScheme();
-
-        if (scheme != null && scheme.equals("content")) {
-            ContentResolver contentResolver = getContentResolver();
-            Cursor cursor = contentResolver.query(uri, null, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (displayNameIndex != -1) {
-                        result = cursor.getString(displayNameIndex);
-                    }
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                // Kiểm tra xem cột DISPLAY_NAME có tồn tại không
+                int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (displayNameIndex >= 0) {
+                    result = cursor.getString(displayNameIndex);
+                } else {
+                    // Nếu cột không tồn tại, xử lý tương ứng (ví dụ: lấy tên từ đường dẫn)
+                    result = uri.getPath();
                 }
+            }
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }
-
-        if (result == null) {
-            DocumentFile documentFile = DocumentFile.fromSingleUri(this, uri);
-            if (documentFile != null) {
-                result = documentFile.getName();
-            }
-        }
-
-        if (result == null) {
-            // Fallback: Lấy tên file từ đường dẫn URI
-            result = uri.getLastPathSegment();
-        }
-
         return result;
     }
 
+    public class SelectedFilesAdapter extends BaseAdapter {
+        private List<String> fileNames;
+        private List<Uri> fileUris;
+        private Context context;
+
+        public SelectedFilesAdapter(Context context, List<String> fileNames, List<Uri> fileUris) {
+            this.context = context;
+            this.fileNames = fileNames;
+            this.fileUris = fileUris;
+        }
+
+        @Override
+        public int getCount() {
+            return fileNames.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return fileNames.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.list_item_selected_file, parent, false);
+            }
+
+            TextView fileNameTextView = convertView.findViewById(R.id.fileNameTextView);
+            ImageView deleteButton = convertView.findViewById(R.id.deleteButton);
+
+            final Uri fileUri = fileUris.get(position); // Lấy Uri tương ứng với tên tệp
+
+            fileNameTextView.setText(fileNames.get(position));
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Xử lý khi người dùng ấn nút X để xóa tệp
+                    fileNames.remove(position);
+                    fileUris.remove(position); // Xóa Uri tương ứng
+                    notifyDataSetChanged(); // Cập nhật danh sách
+                    updateAttachmentTextView(); // Cập nhật TextView sau khi xóa tệp
+                }
+            });
+
+            fileNameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Xử lý khi người dùng nhấp vào tên tệp để mở tệp trong InputStream
+                    try {
+                        InputStream fileInputStream = context.getContentResolver().openInputStream(fileUri);
+                        // Xử lý InputStream tại đây (ví dụ: đọc dữ liệu từ InputStream)
+                        // Ví dụ: Đọc dữ liệu từ InputStream
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+                        StringBuilder stringBuilder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            stringBuilder.append(line).append("\n");
+                        }
+                        // stringBuilder.toString() chứa nội dung của tệp, bạn có thể xử lý nó theo nhu cầu của mình
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // Xử lý lỗi khi không thể mở tệp
+                        // Ví dụ: Hiển thị thông báo lỗi cho người dùng
+                    }
+                }
+            });
+
+            return convertView;
+        }
+    }
 }
 
