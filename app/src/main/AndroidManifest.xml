@@ -18,11 +18,11 @@
         <activity
             android:name=".ViewBaiTap"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".Notification"-->
+<!--            android:exported="false" />-->
         <activity
-            android:name=".Notification"
-            android:exported="false" />
-        <activity
-            android:name=".CreateBaiTap"
+            android:name=".CreateActivity"
             android:exported="false" />
         <activity
             android:name=".UserActivity"
