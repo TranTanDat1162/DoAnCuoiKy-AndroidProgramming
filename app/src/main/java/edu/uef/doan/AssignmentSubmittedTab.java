@@ -1,5 +1,6 @@
 package edu.uef.doan;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -89,9 +90,8 @@ public class AssignmentSubmittedTab extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position
                     , long l) {
-                TextView tv_selected = (TextView) view;
-                Toast.makeText(parentholder.getContext(), tv_selected.getText(),
-                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ViewBaiTap.class);
+                startActivity(intent);
             }
         });
         // Inflate the layout for this fragment

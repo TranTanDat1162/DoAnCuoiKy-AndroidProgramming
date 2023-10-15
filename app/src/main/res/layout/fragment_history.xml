@@ -7,13 +7,16 @@
 
     <TextView
         android:id="@+id/historytextview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Activity"
+        android:gravity="center"
+        android:paddingLeft="15dp"
         android:paddingTop="9dp"
         android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:textSize="25dp">
+        android:text="Notification"
+        android:textAllCaps="true"
+        android:textSize="25dp"
+        android:textStyle="bold">
 
     </TextView>
 
