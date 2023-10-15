@@ -32,7 +32,7 @@
                 android:background="@null"
                 android:clickable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/userdefaultlogo"></ImageButton>
+                android:src="@drawable/_userdefaultlogo"></ImageButton>
 
             <TextView
                 android:id="@+id/textView2"
