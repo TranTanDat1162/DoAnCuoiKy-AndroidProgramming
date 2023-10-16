@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497154545957",
+    "project_id": "androidfinalproject-6874d",
+    "storage_bucket": "androidfinalproject-6874d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497154545957:android:dddf214860ddca6807e2cc",
+        "android_client_info": {
+          "package_name": "edu.uef.doan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDUH68GWz71l-Vw170BrKLd2B_7_V8qOQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
