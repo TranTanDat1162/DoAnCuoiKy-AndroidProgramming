@@ -59,6 +59,8 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(SignupActivity.this, "Sign up successfully!!!", Toast.LENGTH_LONG).show();
                         User user = new User(username, password);
                         dbHelper.addUser(user);
+                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                        startActivity(intent);
                     }
                 }
             }
