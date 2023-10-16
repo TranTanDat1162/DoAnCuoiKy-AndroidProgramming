@@ -122,6 +122,7 @@ public class SignupActivity extends AppCompatActivity {
         });
          */
 
+        // Code using Cloud fire database
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
