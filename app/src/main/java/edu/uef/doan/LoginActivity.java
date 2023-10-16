@@ -138,13 +138,10 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
                                         if (!task.getResult().isEmpty()) {
-                                            // Người dùng tồn tại với tên đăng nhập đã nhập.
-                                            // Kiểm tra mật khẩu.
                                             DocumentSnapshot userDocument = task.getResult().getDocuments().get(0); // Lấy tài liệu đầu tiên (nếu có).
+                                            User user = userDocument.toObject(User.class);
 
-                                            String storedPassword = userDocument.getString("password");
-
-                                            if (storedPassword != null && storedPassword.equals(password)) {
+                                            if (user != null && user.getPassword().equals(password)) {
                                                 // Đăng nhập thành công.
                                                 AnimationForLoginSuccess();
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
@@ -167,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+
 
                 }
             }

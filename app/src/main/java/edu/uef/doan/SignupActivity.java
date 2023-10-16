@@ -165,9 +165,7 @@ public class SignupActivity extends AppCompatActivity {
                                                 Toast.makeText(SignupActivity.this, "Username is already taken", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 // Tài khoản chưa tồn tại, thêm vào Firestore.
-                                                Map<String, Object> user = new HashMap<>();
-                                                user.put("username", username);
-                                                user.put("password", password);
+                                                User user = new User(username, password);
 
                                                 db.collection("users")
                                                         .add(user)
