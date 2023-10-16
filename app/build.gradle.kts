@@ -52,6 +52,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-database:20.2.2")
+    implementation("com.google.firebase:firebase-firestore:24.8.1")
 
     //
     testImplementation("junit:junit:4.13.2")
