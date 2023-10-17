@@ -30,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
 
     TextView tvSignUp, tvUsername, tvPassword;
     Button btnLogin;
+    static User user = new User();
+    static DocumentSnapshot userDocument;
 
     // Code using for Realtime Database
 
@@ -138,12 +140,13 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
                                         if (!task.getResult().isEmpty()) {
-                                            DocumentSnapshot userDocument = task.getResult().getDocuments().get(0); // Lấy tài liệu đầu tiên (nếu có).
-                                            User user = userDocument.toObject(User.class);
+                                            userDocument = task.getResult().getDocuments().get(0); // Lấy tài liệu đầu tiên (nếu có).
+                                            user = userDocument.toObject(User.class);
 
                                             if (user != null && user.getPassword().equals(password)) {
                                                 // Đăng nhập thành công.
                                                 AnimationForLoginSuccess();
+                                                String id = userDocument.getId();
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
 
                                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);

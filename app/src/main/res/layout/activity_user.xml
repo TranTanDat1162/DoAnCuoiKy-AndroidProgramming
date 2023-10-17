@@ -67,7 +67,7 @@
                 android:elevation="50dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/uploadpictureicon"
-                android:tint="#717171" />
+                app:tint="#717171" />
 
             <ImageButton
                 android:id="@+id/imageButton2"
@@ -95,13 +95,13 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/editText_FullName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:inputType="text"
-            android:text="Tan Dat"
+            android:hint="Full name"
             android:textAllCaps="false"
             android:textSize="22sp" />
 
@@ -116,13 +116,13 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextText3"
+            android:id="@+id/editText_Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:inputType="text"
-            android:text="tandat@gmail.com"
+            android:hint="Email"
             android:textSize="22dp" />
 
         <TextView
@@ -135,19 +135,19 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextText4"
+            android:id="@+id/editText_Phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:inputType="text"
-            android:text="1234"
+            android:hint="Phone"
             android:textSize="22dp" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/done_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
