@@ -33,8 +33,8 @@ public class HistoryFragment extends Fragment {
     private String mParam2;
     private ListView lv;
     View parentholder;
-    String[]assignmentsName={"Lab07","Lab08","Lab09","Lab10"};
-    String[]assignmentsDetail={"Ngay giao 10/11/2023 \nNgay nop...","Ngay giao ... \nNgay nop: 55//555adawdwa","Ngay giao ... \nNgay nop awdawrasdww","Ngay giao 10/11/2023 \nNgay nop..."};
+    String[]assignmentsName={"Lab04","Lab04","Lab05","Lab05"};
+    String[]assignmentsDetail={"Ngay tao 10/11/2023 ","Ngay nop 12/11/2023","Ngay tao 15/11/2023","Ngay nop 20/11/2023 "};
     Integer[]bgColor={0,1,2,0};
     List<RowItem> rowItems;
 
