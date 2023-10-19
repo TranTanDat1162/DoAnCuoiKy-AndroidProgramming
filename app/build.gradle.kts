@@ -47,6 +47,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("commons-io:commons-io:2.6")
 
     // For Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +27,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,13 +42,12 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
     static User user = new User();
     static DocumentSnapshot userDocument;
+    static FirebaseStorage storage = FirebaseStorage.getInstance();;
 
-    // Code using for Realtime Database
-
-//    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://androidfinalproject-6874d-default-rtdb.firebaseio.com/");
+    // Create a storage reference from our app
+    StorageReference storageRef = storage.getReference();
 
     // Code using Cloud Firebase
-
     FirebaseFirestore db;
 
     @Override
@@ -46,6 +55,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        try {
+            setupDir();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         addControl();
         addEvent();
     }
@@ -58,65 +72,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        // Code using for Realtime Database (Btn Login)
-        /*
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = tvUsername.getText().toString();
-                String password = tvPassword.getText().toString();
-
-                if (username.isEmpty())
-                {
-                    Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
-                    btnLogin.setBackgroundResource(R.drawable.login_fail);
-                    btnLogin.startAnimation(anim);
-                    Toast.makeText(LoginActivity.this, "Please field username", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
-                    databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.hasChild(username)) {
-                                final String getPassword = snapshot.child(username).child("password").getValue(String.class);
-
-                                if (getPassword.equals(password)) {
-                                    Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
-                                    btnLogin.setBackgroundResource(R.drawable.login_success);
-                                    btnLogin.startAnimation(anim);
-                                    Toast.makeText(LoginActivity.this, "Login successfully!!!", Toast.LENGTH_SHORT).show();
-
-                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
-                                    btnLogin.setBackgroundResource(R.drawable.login_fail);
-                                    btnLogin.startAnimation(anim);
-                                    Toast.makeText(LoginActivity.this, "Wrong password", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Animation anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
-                                btnLogin.setBackgroundResource(R.drawable.login_fail);
-                                btnLogin.startAnimation(anim);
-                                Toast.makeText(LoginActivity.this, "Wrong username", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            // Xử lý lỗi
-                        }
-                    });
-                }
-
-
-            }
-        });
-
-         */
-
         // Code use Cloud Firebase (Btn Login)
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,11 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                                             if (user != null && user.getPassword().equals(password)) {
                                                 // Đăng nhập thành công.
                                                 AnimationForLoginSuccess();
-                                                String id = userDocument.getId();
+                                                syncCloud();
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
-
-                                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                startActivity(intent);
                                             } else {
                                                 // Sai mật khẩu.
                                                 AnimationForLoginFail();
@@ -194,5 +146,34 @@ public class LoginActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.tvUsername);
         tvPassword = findViewById(R.id.tvPassword);
         btnLogin = findViewById(R.id.btnLogin);
+    }
+    private void setupDir() throws IOException {
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/assignments"));
+    }
+    private void syncCloud(){
+        File pfp = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+        if(!pfp.exists()){
+            downloadPfp();
+        }
+        else{
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }
+    }
+    private void downloadPfp(){
+        StorageReference pfpRef = storageRef.child(userDocument.getId()+"/userpfp.jpg");
+        File localFile = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+
+        pfpRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+            // Local temp file has been created
+            Toast.makeText(LoginActivity.this, "Sync Successful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            Toast.makeText(LoginActivity.this, "Sync UnSuccessful", Toast.LENGTH_SHORT).show();
+
+        });
     }
 }

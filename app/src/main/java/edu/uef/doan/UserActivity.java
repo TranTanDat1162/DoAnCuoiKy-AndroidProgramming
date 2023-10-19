@@ -1,5 +1,6 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.storage;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
 
@@ -38,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.apache.commons.io.FilenameUtils;
 
 public class UserActivity extends AppCompatActivity {
     private EditText fullName, phoneNumber, email;
@@ -48,7 +50,7 @@ public class UserActivity extends AppCompatActivity {
     FirebaseFirestore db;
     // Create a storage reference from our app
     StorageReference storageRef;
-    FirebaseStorage storage;
+
     Uri selectedImageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class UserActivity extends AppCompatActivity {
         if (user.getFullname() != null) fullName.setHint(user.getFullname());
         if (user.getEmail() != null) email.setHint(user.getEmail());
         if (user.getPhone() != null) phoneNumber.setHint(user.getPhone());
+
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,11 +125,13 @@ public class UserActivity extends AppCompatActivity {
         });
     }
     private void imageMover() throws IOException {
-        String uriPath = selectedImageUri.getPath();
-//        File image = new File(uriPath + uriPath.substring(selectedImageUri.getLastPathSegment().lastIndexOf(".")));
-        File image = new File(getRealPathFromURI(selectedImageUri));
-        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
-        File targetlocation = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+        String uriPath = getRealPathFromURI(selectedImageUri);
+
+        File image =
+                new File(uriPath);
+        File targetlocation =
+                new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+
         Log.v("UserActivity", "sourceLocation: " + image);
         Log.v("UserActivity", "targetLocation: " + targetlocation);
 
@@ -163,8 +168,17 @@ public class UserActivity extends AppCompatActivity {
         return_btn = findViewById(R.id.returnButton);
 
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+
+        try{
+            File image = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+            if(image.exists()){
+                uploadedImage_view.setImageURI(Uri.fromFile(image));
+            }
+        }
+        catch (Exception e){
+            Toast.makeText(UserActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
     // this function is triggered when
     // the Select Image Button is clicked
