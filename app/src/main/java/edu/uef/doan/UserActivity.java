@@ -7,8 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +29,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class UserActivity extends AppCompatActivity {
     private EditText fullName, phoneNumber, email;
@@ -90,6 +102,12 @@ public class UserActivity extends AppCompatActivity {
                             // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                             user.setImage("Yes");
                             db.collection("users").document(id).set(user);
+                            // make a copy of image and move it to app's specific folder
+                            try {
+                                imageMover();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             Toast.makeText(UserActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -102,6 +120,38 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private void imageMover() throws IOException {
+        String uriPath = selectedImageUri.getPath();
+//        File image = new File(uriPath + uriPath.substring(selectedImageUri.getLastPathSegment().lastIndexOf(".")));
+        File image = new File(getRealPathFromURI(selectedImageUri));
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
+        File targetlocation = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+        Log.v("UserActivity", "sourceLocation: " + image);
+        Log.v("UserActivity", "targetLocation: " + targetlocation);
+
+        // make sure the target file exists
+        if(image.exists()){
+
+            InputStream in = new FileInputStream(image);
+            OutputStream out = new FileOutputStream(targetlocation);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            in.close();
+            out.close();
+
+            Log.v("UserActivity", "Copy file successful.");
+
+        }else{
+            Log.v("UserActivity", "Copy file failed. Source file missing.");
+        }
     }
     private void initializeVar(){
         fullName = findViewById(R.id.editText_FullName);
@@ -146,5 +196,18 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 }
