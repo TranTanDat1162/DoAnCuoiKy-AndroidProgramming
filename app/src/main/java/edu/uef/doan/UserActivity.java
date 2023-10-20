@@ -3,11 +3,14 @@ package edu.uef.doan;
 import static edu.uef.doan.LoginActivity.storage;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
+import static edu.uef.doan.Preferences.*;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,12 +48,14 @@ public class UserActivity extends AppCompatActivity {
     private EditText fullName, phoneNumber, email;
     int SELECT_PICTURE = 200;
     Button apply_btn;
-    ImageButton uploadImage_btn,return_btn;
+    ImageButton uploadImage_btn,return_btn,logout_btn;
     ImageView uploadedImage_view;
     FirebaseFirestore db;
     // Create a storage reference from our app
     StorageReference storageRef;
-
+    // Save login/logout state
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
     Uri selectedImageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,16 @@ public class UserActivity extends AppCompatActivity {
         if (user.getFullname() != null) fullName.setHint(user.getFullname());
         if (user.getEmail() != null) email.setHint(user.getEmail());
         if (user.getPhone() != null) phoneNumber.setHint(user.getPhone());
+
+        logout_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setBooleanDefaults(getString(R.string.userlogged),true,UserActivity.this);
+                Log.v("Login state","false");
+                Intent intent = new Intent(UserActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +181,10 @@ public class UserActivity extends AppCompatActivity {
         uploadImage_btn = findViewById(R.id.uploadImagebtn);
         uploadedImage_view = findViewById(R.id.uploadedImage);
         return_btn = findViewById(R.id.returnButton);
+        logout_btn = findViewById(R.id.logoutButton);
+
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         db = FirebaseFirestore.getInstance();
         storageRef = storage.getReference();

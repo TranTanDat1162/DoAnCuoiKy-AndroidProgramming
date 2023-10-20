@@ -1,17 +1,23 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.Preferences.*;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
     TextView tvSignUp, tvUsername, tvPassword;
     Button btnLogin;
+    CheckBox rememberCheck;
     static User user = new User();
     static DocumentSnapshot userDocument;
     static FirebaseStorage storage = FirebaseStorage.getInstance();;
@@ -50,11 +57,17 @@ public class LoginActivity extends AppCompatActivity {
     // Code using Cloud Firebase
     FirebaseFirestore db;
 
+    // Save login/logout state
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
         try {
             setupDir();
         } catch (IOException e) {
@@ -102,6 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                                                 // Đăng nhập thành công.
                                                 AnimationForLoginSuccess();
                                                 syncCloud();
+                                                if(rememberCheck.isChecked()){
+                                                    setBooleanDefaults(getString(R.string.userlogged),true,LoginActivity.this);
+                                                    setStringDefaults(getString(R.string.userid),userDocument.getId(),LoginActivity.this);
+                                                    Log.v("Login State","true");
+                                                }
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 // Sai mật khẩu.
@@ -146,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.tvUsername);
         tvPassword = findViewById(R.id.tvPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        rememberCheck = findViewById(R.id.checkBox);
     }
     private void setupDir() throws IOException {
         Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
@@ -155,6 +174,8 @@ public class LoginActivity extends AppCompatActivity {
         File pfp = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
         if(!pfp.exists()){
             downloadPfp();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
         }
         else{
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -168,12 +189,9 @@ public class LoginActivity extends AppCompatActivity {
         pfpRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
             // Local temp file has been created
             Toast.makeText(LoginActivity.this, "Sync Successful", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
         }).addOnFailureListener(exception -> {
             // Handle any errors
             Toast.makeText(LoginActivity.this, "Sync UnSuccessful", Toast.LENGTH_SHORT).show();
-
         });
     }
 }

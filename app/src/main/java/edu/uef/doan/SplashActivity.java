@@ -1,11 +1,19 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.user;
+import static edu.uef.doan.Preferences.*;
+import static edu.uef.doan.LoginActivity.userDocument;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -13,18 +21,25 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class SplashActivity extends AppCompatActivity {
 
     Animation topAnim, bottomAnim;
     ImageView imageView;
     TextView app_name;
+    FirebaseFirestore db;
+    String TAG = "SplashAct";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         addControl();
         addEvent();
     }
@@ -33,8 +48,34 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                Intent i = new Intent(SplashActivity.this,LoginActivity.class);
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+////                Intent i = new Intent(SplashActivity.this,LoginActivity.class);
+                boolean isUserLogged = getBooleanDefaults(getString(R.string.userlogged),SplashActivity.this);
+                Intent i;
+                if(isUserLogged) {
+                    db = FirebaseFirestore.getInstance();
+                    String id = getStringDefaults(getString(R.string.userid),SplashActivity.this);
+                    DocumentReference docRef = db.collection("users").document(id);
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                userDocument = task.getResult();
+                                if (userDocument.exists()) {
+                                    user = userDocument.toObject(User.class);
+                                    Log.d(TAG, "DocumentSnapshot data: " + userDocument.getData());
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
+                    i = new Intent(SplashActivity.this, HomeActivity.class);
+                }
+                else
+                    i = new Intent(SplashActivity.this, LoginActivity.class);
+
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair(imageView, "splash_image");
                 pairs[1] = new Pair(imageView, "splash_text");
