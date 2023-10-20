@@ -42,6 +42,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 public class UserActivity extends AppCompatActivity {
@@ -72,8 +74,16 @@ public class UserActivity extends AppCompatActivity {
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Update login state to false
                 setBooleanDefaults(getString(R.string.userlogged),true,UserActivity.this);
                 Log.v("Login state","false");
+                // Wipe files of current user
+                try {
+                    File dir = new File(getApplicationInfo().dataDir + "/user");
+                    FileUtils.cleanDirectory(dir);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 Intent intent = new Intent(UserActivity.this, LoginActivity.class);
                 startActivity(intent);
             }

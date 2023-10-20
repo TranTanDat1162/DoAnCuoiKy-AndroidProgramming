@@ -116,9 +116,14 @@ public class LoginActivity extends AppCompatActivity {
                                                 AnimationForLoginSuccess();
                                                 syncCloud();
                                                 if(rememberCheck.isChecked()){
+                                                    // Ghi chú TT và trạng thái người dùng vào SharedPreferences
                                                     setBooleanDefaults(getString(R.string.userlogged),true,LoginActivity.this);
                                                     setStringDefaults(getString(R.string.userid),userDocument.getId(),LoginActivity.this);
                                                     Log.v("Login State","true");
+                                                }
+                                                else {
+                                                    setBooleanDefaults(getString(R.string.userlogged),false,LoginActivity.this);
+                                                    Log.v("Login State","false");
                                                 }
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                                             } else {
@@ -137,8 +142,6 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
-
                 }
             }
 
@@ -174,8 +177,6 @@ public class LoginActivity extends AppCompatActivity {
         File pfp = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
         if(!pfp.exists()){
             downloadPfp();
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
         }
         else{
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -185,13 +186,17 @@ public class LoginActivity extends AppCompatActivity {
     private void downloadPfp(){
         StorageReference pfpRef = storageRef.child(userDocument.getId()+"/userpfp.jpg");
         File localFile = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
-
         pfpRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
             // Local temp file has been created
-            Toast.makeText(LoginActivity.this, "Sync Successful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            Log.v("DownloadPfp","pfp downloaded");
         }).addOnFailureListener(exception -> {
             // Handle any errors
-            Toast.makeText(LoginActivity.this, "Sync UnSuccessful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            Log.v("DownloadPfp","failed");
         });
+
     }
 }

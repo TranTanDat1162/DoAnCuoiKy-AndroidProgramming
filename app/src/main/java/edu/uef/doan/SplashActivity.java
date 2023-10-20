@@ -71,10 +71,13 @@ public class SplashActivity extends AppCompatActivity {
                             }
                         }
                     });
+                    Log.v("Login state","True");
                     i = new Intent(SplashActivity.this, HomeActivity.class);
                 }
-                else
+                else{
+                    Log.v("Login state","false");
                     i = new Intent(SplashActivity.this, LoginActivity.class);
+                }
 
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair(imageView, "splash_image");
