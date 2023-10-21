@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,9 +37,12 @@ public class AssignmentTab extends Fragment {
     private String mParam2;
     private ListView lv;
     View parentholder;
-    String[]assignmentsName={"Lab04","Lab05","Lab06","Lab04","Lab05","Lab06"};
-    String[]assignmentsDetail={"Ngay giao 10/11/2023 \nNgay nop...","Ngay giao ... \nNgay nop: 55//555adawdwa","Ngay giao ... \nNgay nop awdawrasdww","Ngay giao 10/11/2023 \nNgay nop...","Ngay giao ... \nNgay nop: 55//555adawdwa","Ngay giao ... \nNgay nop awdawrasdww"};
-    Integer[]bgColor={0,1,2,0,1,2};
+    Assignment assignmentlist;
+
+    String[]assignmentsName={assignmentlist.getTitle()};
+    String[]assignmentsDetail={assignmentlist.getTopic()};
+    Integer[]bgColor={0};
+
     List<RowItem> rowItems;
     public AssignmentTab() {
         // Required empty public constructor
@@ -75,7 +80,6 @@ public class AssignmentTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         parentholder = inflater.inflate(R.layout.fragment_assignment_tab, container, false);
-
         lv = (ListView) parentholder.findViewById(R.id.ListViewAssignment);
 
         rowItems = new ArrayList<RowItem>();
