@@ -73,7 +73,7 @@ public class CreateActivity extends AppCompatActivity {
 
 
     private Uri selectedFUri;
-    private ImageButton attachmentButton;
+    private ImageButton attachmentButton,return_btn;
     private TextView attachmentTextView;
 
     private String getMimeType(String filePath) {
@@ -93,12 +93,11 @@ public class CreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-
         ImageButton startDatePickerButton = findViewById(R.id.startDatePickerButton);
         ImageButton startTimePickerButton = findViewById(R.id.startTimePickerButton);
         ImageButton endDatePickerButton = findViewById(R.id.endDatePickerButton);
         ImageButton endTimePickerButton = findViewById(R.id.endTimePickerButton);
-
+        return_btn = findViewById(R.id.returnButton);
         final TextView displayStartDateTextView = findViewById(R.id.displayStartDateTextView);
         final TextView displayStartTimeTextView = findViewById(R.id.displayStartTimeTextView);
         final TextView displayEndDateTextView = findViewById(R.id.displayEndDateTextView);
@@ -176,6 +175,13 @@ public class CreateActivity extends AppCompatActivity {
                 Toast.makeText(CreateActivity.this,"Tao bai thanh cong " ,Toast.LENGTH_SHORT).show();
 
                 Intent intent=new Intent(CreateActivity.this,HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+        return_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });

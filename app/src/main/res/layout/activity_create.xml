@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".CreateActivity"
-    android:background="@drawable/appbackground">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,28 +20,42 @@
             android:layout_weight="1"
             android:src="@drawable/logo2"
             android:scaleType="fitCenter" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/btn_star" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView4"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:background="#92ECF8"
-        android:text="CREATE"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:background="#92ECF8"
+            android:text="CREATE"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/returnButton"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/backarrowicon" />
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="489dp"
+        android:layout_weight="1"
+        android:background="@drawable/appbackground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -134,9 +148,9 @@
                         android:id="@+id/displayStartDateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:hint="dd/mm/yyyy"
                         android:padding="5dp"
-                        android:textSize="18sp"
-                        android:hint="dd/mm/yyyy" />
+                        android:textSize="18sp" />
 
                     <ImageButton
                         android:id="@+id/startTimePickerButton"
@@ -148,9 +162,9 @@
                         android:id="@+id/displayStartTimeTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:hint="HH:mm"
                         android:padding="5dp"
-                        android:textSize="18sp"
-                        android:hint="HH:mm" />
+                        android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -182,9 +196,9 @@
                         android:id="@+id/displayEndDateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:hint="dd/mm/yyyy"
                         android:padding="5dp"
-                        android:textSize="18sp"
-                        android:hint="dd/mm/yyyy" />
+                        android:textSize="18sp" />
 
                     <ImageButton
                         android:id="@+id/endTimePickerButton"
@@ -196,9 +210,9 @@
                         android:id="@+id/displayEndTimeTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:hint="HH:mm"
                         android:padding="5dp"
-                        android:textSize="18sp"
-                        android:hint="HH:mm" />
+                        android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -206,18 +220,18 @@
                 android:id="@+id/tagSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:paddingBottom="13dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/bg_spinner"/>
+                android:background="@drawable/bg_spinner"
+                android:paddingBottom="13dp"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/selectionPrompt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginLeft="10dp"
-                android:textColor="@android:color/holo_red_dark" />
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/customTagLayout"
@@ -230,8 +244,8 @@
                     android:id="@+id/customTagEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
                     android:hint="Nhập tag tùy chỉnh" />
 
                 <Button
