@@ -197,6 +197,5 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             Log.v("DownloadPfp","failed");
         });
-
     }
 }
