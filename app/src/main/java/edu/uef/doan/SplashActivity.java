@@ -54,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
                 if(isUserLogged) {
                     db = FirebaseFirestore.getInstance();
                     String id = getStringDefaults(getString(R.string.userid),SplashActivity.this);
+                    Log.v(TAG,"ID"+ id);
                     DocumentReference docRef = db.collection("users").document(id);
                     docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -62,6 +63,7 @@ public class SplashActivity extends AppCompatActivity {
                                 userDocument = task.getResult();
                                 if (userDocument.exists()) {
                                     user = userDocument.toObject(User.class);
+                                    Log.v(TAG,"ID"+ userDocument.getId());
                                     Log.d(TAG, "DocumentSnapshot data: " + userDocument.getData());
                                 } else {
                                     Log.d(TAG, "No such document");

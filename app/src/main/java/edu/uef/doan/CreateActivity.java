@@ -1,5 +1,8 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.user;
+import static edu.uef.doan.LoginActivity.userDocument;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
@@ -36,19 +39,23 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.documentfile.provider.DocumentFile;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import java.util.Map;
 
 
 public class CreateActivity extends AppCompatActivity {
@@ -70,6 +77,9 @@ public class CreateActivity extends AppCompatActivity {
     private Uri selectedFUri;
     private ImageButton attachmentButton;
     private TextView attachmentTextView;
+    // Khai báo biến cho Firestore
+    private FirebaseFirestore db;
+    AppCompatButton btn1;
 
     private String getMimeType(String filePath) {
         String type = null;
@@ -102,6 +112,7 @@ public class CreateActivity extends AppCompatActivity {
         customTagLayout = findViewById(R.id.customTagLayout);
         okButton = findViewById(R.id.okButton);
         selectionPrompt = findViewById(R.id.selectionPrompt);
+        btn1 = findViewById(R.id.btn1);
 
 
         // Khởi tạo Spinner với các mục "Chọn thể loại", "Essay", "Examination" và "Other"
@@ -119,6 +130,34 @@ public class CreateActivity extends AppCompatActivity {
         attachmentButton = findViewById(R.id.attachmentButton);
         attachmentTextView = findViewById(R.id.attachmentTextView);
         attachmentButton.setOnClickListener(v -> openFilePicker());
+        // Khởi tạo Firestore
+        db = FirebaseFirestore.getInstance();
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Lấy dữ liệu từ các trường nhập liệu
+                String title = ((EditText) findViewById(R.id.editText1)).getText().toString();
+                String topic = ((EditText) findViewById(R.id.editText2)).getText().toString();
+                String startDate = ((TextView) findViewById(R.id.displayStartDateTextView)).getText().toString();
+                String startTime = ((TextView) findViewById(R.id.displayStartTimeTextView)).getText().toString();
+                String endDate = ((TextView) findViewById(R.id.displayEndDateTextView)).getText().toString();
+                String endTime = ((TextView) findViewById(R.id.displayEndTimeTextView)).getText().toString();
+                String category = tagSpinner.getSelectedItem().toString();
+
+                // Kiểm tra xem đã chọn "Other" từ Spinner chưa
+                if (category.equals("Other")) {
+                    category = customTagEditText.getText().toString();
+                }
+
+                // Kiểm tra xem người dùng đã nhập đủ thông tin chưa
+                if (title.isEmpty() || topic.isEmpty() || startDate.isEmpty() || startTime.isEmpty() || endDate.isEmpty() || endTime.isEmpty() || category.isEmpty()) {
+                    Toast.makeText(CreateActivity.this, "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Lưu dữ liệu vào Firestore
+                    saveDataToFirestore(title, topic, startDate, startTime, endDate, endTime, category);
+                }
+            }
+        });
 
         // Bắt sự kiện khi chọn một mục từ Spinner
         tagSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -269,6 +308,34 @@ public class CreateActivity extends AppCompatActivity {
                 openFilePicker();
             }
         });
+    }
+    private void saveDataToFirestore(String title, String topic, String startDate, String startTime, String endDate, String endTime, String category) {
+        // Lấy ID của người dùng hiện tại từ Firebase Authentication
+        String id = userDocument.getId();
+        db.collection("users").document(id).set(user);
+
+        // Tạo một Map chứa dữ liệu để lưu vào Firestore
+        Map<String, Object> assignmentData = new HashMap<>();
+        assignmentData.put("title", title);
+        assignmentData.put("topic", topic  );
+        assignmentData.put("startDate", startDate);
+        assignmentData.put("startTime", startTime);
+        assignmentData.put("endDate", endDate);
+        assignmentData.put("endTime", endTime);
+        assignmentData.put("category", category);
+
+        // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
+        db.collection("users").document(id).collection("assignment")
+                .add(assignmentData)
+                .addOnSuccessListener(documentReference -> {
+                    // Xử lý khi dữ liệu được lưu thành công
+                    Toast.makeText(CreateActivity.this, "Dữ liệu đã được lưu thành công vào Firestore.", Toast.LENGTH_SHORT).show();
+                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi lưu dữ liệu thành công
+                })
+                .addOnFailureListener(e -> {
+                    // Xử lý khi dữ liệu không thể được lưu vào Firestore
+                    Toast.makeText(CreateActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
 
@@ -454,4 +521,5 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 }
+
 
