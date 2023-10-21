@@ -1,26 +1,33 @@
 package edu.uef.doan;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.File;
 
 public class HomeActivity extends AppCompatActivity {
     private ListView lv;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private ImageButton userDetails;
+    private CardView userDetails;
+    private ImageView userPfp;
     private FloatingActionButton create;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,8 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.assignmenttab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
+        userPfp = findViewById(R.id.userpfp);
+
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Replace the contents of the container with the new fragment
@@ -77,30 +86,28 @@ public class HomeActivity extends AppCompatActivity {
         // or ft.add(R.id.your_placeholder, new FooFragment());
         // Complete the changes added above
         ft.commit();
+
+        try{
+            File image = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+            if(image.exists()){
+                userPfp.setImageURI(Uri.fromFile(image));
+            }
+        }
+        catch (Exception e){
+            Toast.makeText(HomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         // onclick listener for user details
-        userDetails = (ImageButton) findViewById(R.id.userDetail);
-        userDetails.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, UserActivity.class);
-                startActivity(intent);
-            }
+        userDetails = (CardView) findViewById(R.id.userDetail);
+        userDetails.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, UserActivity.class);
+            startActivity(intent);
         });
-        // FAB = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-        // FAB.setOnClickListener(new View.OnClickListener(){
-        //     @Override
-        //     public void onClick(View view) {
-        //         Intent intent = new Intent(HomeActivity.this, CreateBaiTap.class);
-        //         startActivity(intent);
-        //     }
-        // });
+
         create= findViewById(R.id.floatingActionButton);
-        create.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, CreateActivity.class);
-                startActivity(intent);
-            }
+        create.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, CreateActivity.class);
+            startActivity(intent);
         });
     }
 

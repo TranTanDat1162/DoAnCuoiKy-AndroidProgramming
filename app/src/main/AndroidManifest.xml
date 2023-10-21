@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingLeanbackLauncher">
 
     <uses-feature
         android:name="android.software.leanback"
@@ -22,11 +23,11 @@
         <activity
             android:name=".ViewBaiTap"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".Notification"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".CreateActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CreateBaiTap"
             android:exported="false" />
         <activity
             android:name=".UserActivity"

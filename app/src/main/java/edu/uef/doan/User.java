@@ -1,12 +1,12 @@
 package edu.uef.doan;
 
 public class User {
-    private int id;
     private String username;
     private String password;
     private String fullname;
     private String image;
     private String email;
+    private String phone;
 
     public String getFullname() {
         return fullname;
@@ -14,16 +14,6 @@ public class User {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
-    }
-
-    private String phone;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -46,9 +36,7 @@ public class User {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
+    public void setImage(String image) { this.image = image; }
 
     public String getEmail() {
         return email;
