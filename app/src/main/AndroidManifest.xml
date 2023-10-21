@@ -23,7 +23,7 @@
             android:name=".ViewBaiTap"
             android:exported="false" />
         <activity
-            android:name=".Notification"
+            android:name=".CreateActivity"
             android:exported="false" />
         <activity
             android:name=".CreateBaiTap"
