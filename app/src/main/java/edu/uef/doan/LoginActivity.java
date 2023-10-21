@@ -1,6 +1,8 @@
 package edu.uef.doan;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import static edu.uef.doan.Preferences.*;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -110,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
                                         if (!task.getResult().isEmpty()) {
                                             userDocument = task.getResult().getDocuments().get(0); // Lấy tài liệu đầu tiên (nếu có).
                                             user = userDocument.toObject(User.class);
-
                                             if (user != null && user.getPassword().equals(password)) {
                                                 // Đăng nhập thành công.
                                                 AnimationForLoginSuccess();
@@ -125,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     setBooleanDefaults(getString(R.string.userlogged),false,LoginActivity.this);
                                                     Log.v("Login State","false");
                                                 }
+//                                                PopulateList.UpdateL(db,LoginActivity.this);
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 // Sai mật khẩu.
@@ -188,13 +191,11 @@ public class LoginActivity extends AppCompatActivity {
         File localFile = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
         pfpRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
             // Local temp file has been created
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
+            PopulateList.UpdateL(db,LoginActivity.this);
             Log.v("DownloadPfp","pfp downloaded");
         }).addOnFailureListener(exception -> {
             // Handle any errors
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
+            PopulateList.UpdateL(db,LoginActivity.this);
             Log.v("DownloadPfp","failed");
         });
     }

@@ -10,6 +10,8 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,11 +23,13 @@
         android:theme="@style/Theme.DoAn"
         tools:targetApi="31">
         <activity
-            android:name=".ViewBaiTap"
+            android:name=".DemoActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".Notification"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".ViewBaiTap"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".Notification" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".CreateActivity"
             android:exported="false" />
@@ -49,9 +53,11 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -62,6 +68,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>
