@@ -27,6 +27,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+
 public class SplashActivity extends AppCompatActivity {
 
     Animation topAnim, bottomAnim;
@@ -78,6 +83,12 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 else{
                     Log.v("Login state","false");
+                    try {
+                        File dir = new File(getApplicationInfo().dataDir + "/user");
+                        FileUtils.cleanDirectory(dir);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     i = new Intent(SplashActivity.this, LoginActivity.class);
                 }
 

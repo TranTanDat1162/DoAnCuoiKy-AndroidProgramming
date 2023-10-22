@@ -8,14 +8,17 @@ import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,10 +75,11 @@ public class CreateActivity extends AppCompatActivity {
     private ArrayAdapter<String> tagAdapter;
     private static final int PICK_FILES_REQUEST_CODE = 1;
     private static final int OPEN_FILE_REQUEST_CODE = 2;
+    AppCompatButton btn1;
 
 
     private Uri selectedFUri;
-    private ImageButton attachmentButton;
+    private ImageButton attachmentButton,return_btn;
     private TextView attachmentTextView;
     // Khai báo biến cho Firestore
     private FirebaseFirestore db;
@@ -98,11 +102,11 @@ public class CreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-
         ImageButton startDatePickerButton = findViewById(R.id.startDatePickerButton);
         ImageButton startTimePickerButton = findViewById(R.id.startTimePickerButton);
         ImageButton endDatePickerButton = findViewById(R.id.endDatePickerButton);
         ImageButton endTimePickerButton = findViewById(R.id.endTimePickerButton);
+        return_btn = findViewById(R.id.returnButton);
         final TextView displayStartDateTextView = findViewById(R.id.displayStartDateTextView);
         final TextView displayStartTimeTextView = findViewById(R.id.displayStartTimeTextView);
         final TextView displayEndDateTextView = findViewById(R.id.displayEndDateTextView);
@@ -112,7 +116,7 @@ public class CreateActivity extends AppCompatActivity {
         customTagLayout = findViewById(R.id.customTagLayout);
         okButton = findViewById(R.id.okButton);
         selectionPrompt = findViewById(R.id.selectionPrompt);
-        btn1 = findViewById(R.id.btn1);
+        btn1=  findViewById(R.id.btn1);
 
 
         // Khởi tạo Spinner với các mục "Chọn thể loại", "Essay", "Examination" và "Other"
@@ -202,7 +206,22 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(CreateActivity.this,"Tao bai thanh cong " ,Toast.LENGTH_SHORT).show();
 
+                Intent intent=new Intent(CreateActivity.this,HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+        return_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
         // Ngày bắt đầu
         startDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -354,22 +373,18 @@ public class CreateActivity extends AppCompatActivity {
         if (requestCode == PICK_FILES_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
-                // Nếu người dùng chọn nhiều tệp
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri fileUri = clipData.getItemAt(i).getUri();
-                    selectedFiles.add(fileUri);
+                    selectedFiles.add(fileUri); // Lưu trữ Uri của tệp đã chọn
                     selectedFileNames.add(getFileName(fileUri));
                 }
-                // Hiển thị số lượng tệp đã chọn
                 attachmentTextView.setText("Đã chọn " + selectedFiles.size() + " tệp");
                 attachmentTextView.setVisibility(View.VISIBLE);
             } else if (data.getData() != null) {
-                // Nếu người dùng chỉ chọn một tệp
                 Uri fileUri = data.getData();
-                selectedFiles.add(fileUri);
+                selectedFiles.add(fileUri); // Lưu trữ Uri của tệp đã chọn
                 String fileName = getFileName(fileUri);
                 selectedFileNames.add(fileName);
-                // Hiển thị tên tệp đã chọn và thực hiện animation
                 attachmentTextView.setText(fileName);
                 attachmentTextView.setVisibility(View.VISIBLE);
             }
@@ -386,6 +401,7 @@ public class CreateActivity extends AppCompatActivity {
         });
     }
 
+
     private void showSelectedFileList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Danh sách các tệp đã chọn");
@@ -396,8 +412,16 @@ public class CreateActivity extends AppCompatActivity {
         SelectedFilesAdapter adapter = new SelectedFilesAdapter(this, selectedFileNames, selectedFiles);
         selectedFilesListView.setAdapter(adapter);
 
+        selectedFilesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Xử lý khi người dùng nhấp vào một tệp
+                openSelectedFile(selectedFiles.get(position));
+            }
+        });
+
         builder.setView(selectedFilesView);
-        builder.setPositiveButton("Xử lý", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Xong", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Xử lý khi người dùng ấn nút "Xử lý"
@@ -406,6 +430,18 @@ public class CreateActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+
+    private void openSelectedFile(Uri fileUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(fileUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(CreateActivity.this, "Không có ứng dụng nào có thể mở file này", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -418,6 +454,7 @@ public class CreateActivity extends AppCompatActivity {
             attachmentTextView.setText("Đã chọn " + selectedFileNames.size() + " tệp");
         }
     }
+
 
 
     // Phương thức để lấy tên tệp từ Uri
@@ -443,6 +480,7 @@ public class CreateActivity extends AppCompatActivity {
         }
         return result;
     }
+
 
     public class SelectedFilesAdapter extends BaseAdapter {
         private List<String> fileNames;
@@ -479,9 +517,36 @@ public class CreateActivity extends AppCompatActivity {
             TextView fileNameTextView = convertView.findViewById(R.id.fileNameTextView);
             ImageView deleteButton = convertView.findViewById(R.id.deleteButton);
 
-            final Uri fileUri = fileUris.get(position); // Lấy Uri tương ứng với tên tệp
-
             fileNameTextView.setText(fileNames.get(position));
+
+            // Thêm sự kiện OnClickListener cho fileNameTextView
+            fileNameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Lấy Uri tương ứng với vị trí được nhấn trong danh sách
+                    Uri fileUri = fileUris.get(position);
+                    openSelectedFile(fileUris.get(position));
+                    if (fileUri != null) {
+                        // Xử lý khi người dùng nhấp vào tên tệp để mở tệp
+                        try {
+                            InputStream fileInputStream = context.getContentResolver().openInputStream(fileUri);
+                            // Xử lý InputStream tại đây (ví dụ: đọc dữ liệu từ InputStream)
+                            // Ví dụ: Đọc dữ liệu từ InputStream
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+                            StringBuilder stringBuilder = new StringBuilder();
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                stringBuilder.append(line).append("\n");
+                            }
+                            // stringBuilder.toString() chứa nội dung của tệp, bạn có thể xử lý nó theo nhu cầu của mình
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // Xử lý lỗi khi không thể mở tệp
+                            // Ví dụ: Hiển thị thông báo lỗi cho người dùng
+                        }
+                    }
+                }
+            });
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -494,32 +559,10 @@ public class CreateActivity extends AppCompatActivity {
                 }
             });
 
-            fileNameTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Xử lý khi người dùng nhấp vào tên tệp để mở tệp trong InputStream
-                    try {
-                        InputStream fileInputStream = context.getContentResolver().openInputStream(fileUri);
-                        // Xử lý InputStream tại đây (ví dụ: đọc dữ liệu từ InputStream)
-                        // Ví dụ: Đọc dữ liệu từ InputStream
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            stringBuilder.append(line).append("\n");
-                        }
-                        // stringBuilder.toString() chứa nội dung của tệp, bạn có thể xử lý nó theo nhu cầu của mình
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        // Xử lý lỗi khi không thể mở tệp
-                        // Ví dụ: Hiển thị thông báo lỗi cho người dùng
-                    }
-                }
-            });
-
             return convertView;
         }
     }
+
 }
 
 
