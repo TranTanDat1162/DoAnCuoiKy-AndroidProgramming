@@ -44,6 +44,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -52,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox rememberCheck;
     static User user = new User();
     static DocumentSnapshot userDocument;
-    static FirebaseStorage storage = FirebaseStorage.getInstance();;
+    static FirebaseStorage storage = FirebaseStorage.getInstance();
+    static List mList = new ArrayList<AssignmentList>();
 
     // Create a storage reference from our app
     StorageReference storageRef = storage.getReference();

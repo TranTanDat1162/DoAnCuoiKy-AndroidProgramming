@@ -1,5 +1,7 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.mList;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,8 +39,7 @@ public class AssignmentTab extends Fragment {
     private String mParam2;
     private ListView lv;
     View parentholder;
-    Assignment assignmentlist;
-
+    Assignment assignmentlist = new Assignment();
     String[]assignmentsName={assignmentlist.getTitle()};
     String[]assignmentsDetail={assignmentlist.getTopic()};
     Integer[]bgColor={0};

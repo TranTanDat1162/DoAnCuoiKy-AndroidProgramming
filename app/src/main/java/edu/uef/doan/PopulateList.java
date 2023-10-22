@@ -3,6 +3,7 @@ package edu.uef.doan;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import static androidx.core.content.ContextCompat.startActivity;
 
+import static edu.uef.doan.LoginActivity.mList;
 import static edu.uef.doan.LoginActivity.userDocument;
 
 import android.content.Context;
@@ -26,7 +27,7 @@ import java.util.List;
 public class PopulateList {
    public static void UpdateL(FirebaseFirestore db, Context cxt)
    {
-       List mList = new ArrayList<AssignmentList>();  //this is my arraylist
+//       List mList = new ArrayList<AssignmentList>();  //this is my arraylist
        db.collection("users")
                .document(userDocument.getId())
                .collection("assignment")
@@ -37,9 +38,8 @@ public class PopulateList {
                        if (task.isSuccessful()) {
                            for (QueryDocumentSnapshot document : task.getResult()) {
                                mList.add(new AssignmentList(document.getId(),document.toObject(Assignment.class)));
-                               Intent intent = new Intent(cxt, HomeActivity.class);
-                               cxt.startActivity(intent);
-
+//                               Intent intent = new Intent(cxt, HomeActivity.class);
+//                               cxt.startActivity(intent);
                                Log.d(TAG, document.getId() + " => " + document.getData());
                            }
                            Log.v(TAG,mList.toString());
@@ -48,6 +48,6 @@ public class PopulateList {
                        }
                    }
                });
-    }
    }
+}
 
