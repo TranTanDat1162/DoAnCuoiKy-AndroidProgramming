@@ -81,6 +81,7 @@ public class UserActivity extends AppCompatActivity {
                 try {
                     File dir = new File(getApplicationInfo().dataDir + "/user");
                     FileUtils.cleanDirectory(dir);
+                    Log.v("UserAct","Directory deleted");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -143,9 +144,11 @@ public class UserActivity extends AppCompatActivity {
                 //Send the newly acquired data to the cloud
                 else {
                     db.collection("users").document(id).set(user);
-                    finish();
-                    startActivity(getIntent());
+//                    finish();
+//                    startActivity(getIntent());
                 }
+                Intent intent = new Intent(UserActivity.this, HomeActivity.class);
+                startActivity(intent);
             }
         });
     }

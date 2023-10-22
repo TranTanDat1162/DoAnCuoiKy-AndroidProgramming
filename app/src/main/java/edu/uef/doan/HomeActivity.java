@@ -1,5 +1,7 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.user;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,6 +26,7 @@ import java.io.File;
 
 public class HomeActivity extends AppCompatActivity {
     private ListView lv;
+    private  TextView userName;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private CardView userDetails;
@@ -78,6 +81,8 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         userPfp = findViewById(R.id.userpfp);
+        userName = findViewById(R.id.textView_username);
+        userName.setText(user.getUsername());
 
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
