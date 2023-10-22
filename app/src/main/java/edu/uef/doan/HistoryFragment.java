@@ -87,9 +87,9 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position
                     , long l) {
-                TextView tv_selected = (TextView) view;
-                Toast.makeText(parentholder.getContext(), tv_selected.getText(),
-                        Toast.LENGTH_SHORT).show();
+//                TextView tv_selected = (TextView) view;
+//                Toast.makeText(parentholder.getContext(), tv_selected.getText(),
+//                        Toast.LENGTH_SHORT).show();
             }
         });
         // Inflate the layout for this fragment
