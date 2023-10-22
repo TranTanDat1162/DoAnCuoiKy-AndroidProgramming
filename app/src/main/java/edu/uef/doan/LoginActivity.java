@@ -43,14 +43,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class LoginActivity extends AppCompatActivity {
-
     TextView tvSignUp, tvUsername, tvPassword;
     Button btnLogin;
     CheckBox rememberCheck;
     static User user = new User();
     static DocumentSnapshot userDocument;
     static FirebaseStorage storage = FirebaseStorage.getInstance();;
-
+    String TAG = "LoginAct";
     // Create a storage reference from our app
     StorageReference storageRef = storage.getReference();
 
@@ -68,11 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        try {
-            setupDir();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            setupDir();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         addControl();
         addEvent();
     }
@@ -110,11 +109,15 @@ public class LoginActivity extends AppCompatActivity {
                                         if (!task.getResult().isEmpty()) {
                                             userDocument = task.getResult().getDocuments().get(0); // Lấy tài liệu đầu tiên (nếu có).
                                             user = userDocument.toObject(User.class);
-
+                                            Log.v(TAG,"user data fetched");
                                             if (user != null && user.getPassword().equals(password)) {
                                                 // Đăng nhập thành công.
                                                 AnimationForLoginSuccess();
-                                                syncCloud();
+                                                try {
+                                                    syncCloud();
+                                                } catch (IOException e) {
+                                                    throw new RuntimeException(e);
+                                                }
                                                 if(rememberCheck.isChecked()){
                                                     // Ghi chú TT và trạng thái người dùng vào SharedPreferences
                                                     setBooleanDefaults(getString(R.string.userlogged),true,LoginActivity.this);
@@ -169,11 +172,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         rememberCheck = findViewById(R.id.checkBox);
     }
-    private void setupDir() throws IOException {
-        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
-        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/assignments"));
-    }
-    private void syncCloud(){
+    private void syncCloud() throws IOException {
+        setupDir();
         File pfp = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
         if(!pfp.exists()){
             downloadPfp();
@@ -197,6 +197,9 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             Log.v("DownloadPfp","failed");
         });
-
+    }
+    private void setupDir() throws IOException {
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/assignments"));
     }
 }
