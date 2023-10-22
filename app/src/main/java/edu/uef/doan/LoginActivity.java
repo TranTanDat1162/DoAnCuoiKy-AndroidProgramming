@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     setBooleanDefaults(getString(R.string.userlogged),false,LoginActivity.this);
                                                     Log.v("Login State","false");
                                                 }
-//                                                PopulateList.UpdateL(db,LoginActivity.this);
+                                                PopulateList.UpdateL(db,LoginActivity.this);
                                                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 // Sai mật khẩu.

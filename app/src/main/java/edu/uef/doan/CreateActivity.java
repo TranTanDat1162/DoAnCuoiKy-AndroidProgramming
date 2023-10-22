@@ -7,22 +7,16 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,18 +37,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.FileProvider;
-import androidx.documentfile.provider.DocumentFile;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -76,14 +65,11 @@ public class CreateActivity extends AppCompatActivity {
     private static final int PICK_FILES_REQUEST_CODE = 1;
     private static final int OPEN_FILE_REQUEST_CODE = 2;
     AppCompatButton btn1;
-
-
     private Uri selectedFUri;
     private ImageButton attachmentButton,return_btn;
     private TextView attachmentTextView;
     // Khai báo biến cho Firestore
     private FirebaseFirestore db;
-    AppCompatButton btn1;
 
     private String getMimeType(String filePath) {
         String type = null;
@@ -116,7 +102,7 @@ public class CreateActivity extends AppCompatActivity {
         customTagLayout = findViewById(R.id.customTagLayout);
         okButton = findViewById(R.id.okButton);
         selectionPrompt = findViewById(R.id.selectionPrompt);
-        btn1=  findViewById(R.id.btn1);
+        btn1=  findViewById(R.id.createnew_btn);
 
 
         // Khởi tạo Spinner với các mục "Chọn thể loại", "Essay", "Examination" và "Other"
@@ -206,15 +192,15 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CreateActivity.this,"Tao bai thanh cong " ,Toast.LENGTH_SHORT).show();
-
-                Intent intent=new Intent(CreateActivity.this,HomeActivity.class);
-                startActivity(intent);
-            }
-        });
+//        btn1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(CreateActivity.this,"Tao bai thanh cong " ,Toast.LENGTH_SHORT).show();
+//
+//                Intent intent=new Intent(CreateActivity.this,HomeActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -350,6 +336,7 @@ public class CreateActivity extends AppCompatActivity {
                     // Xử lý khi dữ liệu được lưu thành công
                     Toast.makeText(CreateActivity.this, "Dữ liệu đã được lưu thành công vào Firestore.", Toast.LENGTH_SHORT).show();
                     // Điều hướng hoặc thực hiện các hành động cần thiết sau khi lưu dữ liệu thành công
+                    PopulateList.UpdateL(db,CreateActivity.this);
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý khi dữ liệu không thể được lưu vào Firestore

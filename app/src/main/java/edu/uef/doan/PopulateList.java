@@ -36,10 +36,12 @@ public class PopulateList {
                    @Override
                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                        if (task.isSuccessful()) {
+                           mList.clear();
                            for (QueryDocumentSnapshot document : task.getResult()) {
                                mList.add(new AssignmentList(document.getId(),document.toObject(Assignment.class)));
-//                               Intent intent = new Intent(cxt, HomeActivity.class);
-//                               cxt.startActivity(intent);
+                               Intent intent = new Intent(cxt, HomeActivity.class);
+                               intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                               cxt.startActivity(intent);
                                Log.d(TAG, document.getId() + " => " + document.getData());
                            }
                            Log.v(TAG,mList.toString());

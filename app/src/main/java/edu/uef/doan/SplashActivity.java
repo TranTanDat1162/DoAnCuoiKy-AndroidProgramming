@@ -66,6 +66,7 @@ public class SplashActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
                                 userDocument = task.getResult();
+                                PopulateList.UpdateL(db,SplashActivity.this);
                                 if (userDocument.exists()) {
                                     user = userDocument.toObject(User.class);
                                     Log.v(TAG,"ID"+ userDocument.getId());
@@ -89,6 +90,7 @@ public class SplashActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    PopulateList.UpdateL(db,SplashActivity.this);
                     i = new Intent(SplashActivity.this, LoginActivity.class);
                 }
 

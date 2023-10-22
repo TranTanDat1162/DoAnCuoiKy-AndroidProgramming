@@ -39,11 +39,10 @@ public class AssignmentTab extends Fragment {
     private String mParam2;
     private ListView lv;
     View parentholder;
-    Assignment assignmentlist = new Assignment();
-    String[]assignmentsName={assignmentlist.getTitle()};
-    String[]assignmentsDetail={assignmentlist.getTopic()};
-    Integer[]bgColor={0};
-
+    Assignment assignment = new Assignment();
+//    String[] assignmentsName = {assignment.getTitle()};
+//    String[] assignmentsDetail = {assignment.getTopic()};
+//    Integer[] bgColor = {0};
     List<RowItem> rowItems;
     public AssignmentTab() {
         // Required empty public constructor
@@ -82,12 +81,28 @@ public class AssignmentTab extends Fragment {
                              Bundle savedInstanceState) {
         parentholder = inflater.inflate(R.layout.fragment_assignment_tab, container, false);
         lv = (ListView) parentholder.findViewById(R.id.ListViewAssignment);
-
-        rowItems = new ArrayList<RowItem>();
-        for (int i = 0; i < assignmentsName.length; i++) {
-            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
-            rowItems.add(item);
+        try {
+//            assignments = (AssignmentList) mList.get(0);
+//            assignment = (Assignment) assignments.getAssignment();
+//            assignmentsName = new String[]{assignment.getTitle()};
+//            assignmentsDetail = new String[]{assignment.getTopic()};
+//            bgColor = new Integer[]{0};
+            rowItems = new ArrayList<RowItem>();
+            for (Object obj : mList) {
+                AssignmentList assignments = (AssignmentList) obj;
+                Assignment assignment = assignments.getAssignment();
+                RowItem item = new RowItem(assignment.getTitle(), assignment.getTopic(), 0);
+                rowItems.add(item);
+            }
         }
+        catch (Exception e){
+            Log.v("Assignment","Empty");
+        }
+
+//        for (int i = 0; i < assignmentsName.length; i++) {
+//            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
+//            rowItems.add(item);
+//        }
         ArrayAdapter<RowItem> mAdapter =
                 new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems);
         lv.setAdapter(mAdapter);

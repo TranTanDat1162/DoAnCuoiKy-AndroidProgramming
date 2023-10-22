@@ -6,6 +6,8 @@ public class AssignmentList {
         this.assignment = assignment;
     }
 
+    public AssignmentList() {    }
+
     public String getId() {
         return id;
     }
