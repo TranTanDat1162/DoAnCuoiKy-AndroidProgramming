@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/firstline"
+        android:layout_marginBottom="5dp"
         android:paddingLeft="10sp"
         android:textColor="#2A2B2E"
         android:textSize="16sp" />
