@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreateActivity"
+    android:background="@drawable/appbackground" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_weight="1"
+            android:src="@drawable/logo" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+
+        <ImageButton
+            android:id="@+id/returnButton"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/backarrowicon" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="489dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tạo tiêu đề:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/vien"
+                android:contentDescription="Tiêu đề"
+                android:gravity="top"
+                android:hint="Tiêu đề"
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                android:scrollbars="vertical"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tạo đề bài:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_gravity="top"
+                android:layout_margin="15dp"
+                android:background="@drawable/vien"
+                android:contentDescription="Nhập đề bài"
+                android:gravity="top"
+                android:hint="Nhập đề bài vào đây/ hoặc đính kèm file bài làm ở nút bên dưới"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:scrollbars="vertical"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/attachmentButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_attachment" />
+
+                <TextView
+                    android:id="@+id/attachmentTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="Đính kèm file"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày và thời gian bắt đầu:"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/startDatePickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_calendar" />
+
+                    <TextView
+                        android:id="@+id/displayStartDateTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="dd/mm/yyyy"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <ImageButton
+                        android:id="@+id/startTimePickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_clock" />
+
+                    <TextView
+                        android:id="@+id/displayStartTimeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="HH:mm"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày và thời gian kết thúc:"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/endDatePickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_calendar" />
+
+                    <TextView
+                        android:id="@+id/displayEndDateTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="dd/mm/yyyy"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <ImageButton
+                        android:id="@+id/endTimePickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_clock" />
+
+                    <TextView
+                        android:id="@+id/displayEndTimeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="HH:mm"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/tagSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_spinner"
+                android:paddingBottom="13dp"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/selectionPrompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/customTagLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/customTagEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:hint="Nhập tag tùy chỉnh" />
+
+                <Button
+                    android:id="@+id/okButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OK" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/createnew_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Done" />
+</LinearLayout>
