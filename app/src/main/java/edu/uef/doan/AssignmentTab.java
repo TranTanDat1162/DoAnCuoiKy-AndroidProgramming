@@ -1,11 +1,13 @@
 package edu.uef.doan;
 
 import static edu.uef.doan.LoginActivity.mList;
+import static edu.uef.doan.LoginActivity.userDocument;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -17,6 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,7 @@ public class AssignmentTab extends Fragment {
     private String mParam2;
     private ListView lv;
     View parentholder;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     Assignment assignment = new Assignment();
 //    String[] assignmentsName = {assignment.getTitle()};
 //    String[] assignmentsDetail = {assignment.getTopic()};
@@ -108,16 +115,45 @@ public class AssignmentTab extends Fragment {
 //            rowItems.add(item);
 //        }
         ArrayAdapter<RowItem> mAdapter =
-                new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems);
+                new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems){
+                    @Override
+                    public View getView(final int position, View convertView, ViewGroup parent) {
+                        View inflatedView = super.getView(position, convertView, parent);
+
+                        // set a click listener
+                        // TODO change "R.id.buttonId" to reference the ID value you set for the button's android:id attribute in foodlist.xml
+                        inflatedView.findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AssignmentList selected_item_id = (AssignmentList) mList.get(position);
+                                db.collection("users")
+                                        .document(userDocument.getId())
+                                        .collection("assignment").document(selected_item_id.getId()).delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                PopulateList.UpdateL(db,getContext());
+                                                Log.d("Delete", "DocumentSnapshot successfully deleted!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Delete", "Error deleting document", e);
+                                            }
+                                        });
+//                                Toast.makeText(v.getContext(), "Button 1  clicked for row position=" + selected_item.getId(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        return inflatedView;
+
+                    }
+                };
         lv.setAdapter(mAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position
                     , long l) {
-//                TextView tv_selected = (TextView) view;
-//                Toast.makeText(parentholder.getContext(), tv_selected.getText(),
-//                        Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent(getActivity(), ViewBaiTap.class);
                 startActivity(intent);
             }
