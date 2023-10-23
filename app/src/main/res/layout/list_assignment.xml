@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/assignmentlayout"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="?android:attr/listPreferredItemHeight"
     android:background="@drawable/rounded_assignment_block"
     android:padding="6dip">
 
@@ -30,13 +30,10 @@
         app:srcCompat="@drawable/baseline_edit_24" />
 
     <TextView
-        android:id="@+id/firstline"
-        android:text="Lab 01"
+        android:id="@+id/Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="24sp" />
 
