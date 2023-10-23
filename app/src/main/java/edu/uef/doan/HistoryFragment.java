@@ -13,7 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,8 +35,9 @@ public class HistoryFragment extends Fragment {
     private String mParam2;
     private ListView lv;
     View parentholder;
-    String[]assignmentsName={"Lab04","Lab04","Lab05","Lab05"};
-    String[]assignmentsDetail={"Ngay tao 10/11/2023 ","Ngay nop 12/11/2023","Ngay tao 15/11/2023","Ngay nop 20/11/2023 "};
+    Date[] dates ={new Date(), new Date()};
+//    LocalTime[] times = { LocalTime.now() , LocalTime.now()};
+    String[] descriptions ={"Chao mung ban den voi binh nguyen vo tan ","Yeu em Cuonggg"};
     Integer[]bgColor={0,1,2,0};
     List<RowItem> rowItems;
 
@@ -76,17 +79,16 @@ public class HistoryFragment extends Fragment {
 
         lv = (ListView) parentholder.findViewById(R.id.ListViewHistory);
         rowItems = new ArrayList<RowItem>();
-        for (int i = 0; i < assignmentsName.length; i++) {
-            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
+        for (int i = 0; i < descriptions.length; i++) {
+            RowItem item = new RowItem(descriptions[i],bgColor[i],dates[i]);
             rowItems.add(item);
         }
         ArrayAdapter<RowItem> mAdapter =
-                new CustomArrayAdapter(getContext(),R.id.ListViewHistory,rowItems);
+                new CustomArrayAdapterNotification(getContext(),R.id.ListViewHistory,rowItems);
         lv.setAdapter(mAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position
-                    , long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 //                TextView tv_selected = (TextView) view;
 //                Toast.makeText(parentholder.getContext(), tv_selected.getText(),
 //                        Toast.LENGTH_SHORT).show();
