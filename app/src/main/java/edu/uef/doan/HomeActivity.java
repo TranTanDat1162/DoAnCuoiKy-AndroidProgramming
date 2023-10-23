@@ -1,6 +1,8 @@
 package edu.uef.doan;
 
+import static java.security.AccessController.getContext;
 import static edu.uef.doan.LoginActivity.user;
+import static edu.uef.doan.LoginActivity.mList;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -11,11 +13,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -25,6 +32,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class HomeActivity extends AppCompatActivity {
     private ListView lv;
@@ -34,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     private CardView userDetails;
     private ImageView userPfp;
 
+
     private ImageButton imgButtonSort;
     private FloatingActionButton create;
     @SuppressLint("MissingInflatedId")
@@ -42,7 +55,40 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        imgButtonSort = findViewById(R.id.imageButtonSort);
+        final PopupMenu dropDownMenu = new PopupMenu(HomeActivity.this, imgButtonSort);
+        final Menu menu = dropDownMenu.getMenu();
+        dropDownMenu.getMenuInflater().inflate(R.menu.sortlist, menu);
+        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.s11) {
+                    Collections.sort(mList, new Comparator<AssignmentList>(){
+                        @Override
+                        public int compare(AssignmentList t0, AssignmentList t1) {
+                            return t0.getAssignment().getTitle().compareTo(t1.getAssignment().getTitle());
+                        }
+                    });
+                    recreate();
+                    Log.v("SubMenuClick", "Submenu Item: s11");
+                    return true;
+                } else if (itemId == R.id.s12) {
+                    Log.v("SubMenuClick", "Submenu Item: s12");
+                    return true;
+                } else if (itemId == R.id.s13) {
+                    Log.v("SubMenuClick", "Submenu Item: s13");
+                    return true;
+                } else if (itemId == R.id.s21) {
+                    Log.v("SubMenuClick", "Submenu Item: s21");
+                    return true;
+                } else if (itemId == R.id.s22) {
+                    Log.v("SubMenuClick", "Submenu Item: s22");
+                    return true;
+                }
+                return false;
+            }
+        });
 
 //        // initiating the tabhost
         TabHost tabhost = findViewById(R.id.tabhost);
@@ -125,7 +171,7 @@ public class HomeActivity extends AppCompatActivity {
         imgButtonSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dropDownMenu.show();
             }
         });
     }

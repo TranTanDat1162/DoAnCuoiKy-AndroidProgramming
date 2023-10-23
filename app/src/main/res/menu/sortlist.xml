@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <item android:id="@+id/i1" android:title="Sort by type" app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/s11" android:title="Examination" app:showAsAction="ifRoom|withText" />
+            <item android:id="@+id/s12" android:title="Essay" app:showAsAction="ifRoom|withText" />
+            <item android:id="@+id/s13" android:title="Other" app:showAsAction="ifRoom|withText" />
+        </menu>
+    </item>
+    <item android:id="@+id/i2" android:title="Sort by time" app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/s21" android:title="Longest" app:showAsAction="ifRoom|withText" />
+            <item android:id="@+id/s22" android:title="Latest" app:showAsAction="ifRoom|withText" />
+        </menu>
+    </item>
+</menu>
