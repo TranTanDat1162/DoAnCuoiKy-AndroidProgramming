@@ -2,26 +2,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/assignmentlayout"
     android:layout_width="wrap_content"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="wrap_content"
     android:background="@drawable/rounded_assignment_block"
     android:padding="6dip">
 
     <TextView
         android:id="@+id/firstline"
+        android:text="Lab 01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
+        android:layout_marginRight="15dp"
+        android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="24sp" />
 
     <TextView
         android:id="@+id/secondline"
+        android:text="Do this and that"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/firstline"
         android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
         android:paddingLeft="10sp"
         android:textColor="#2A2B2E"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/thirdline"
+        android:text="Deadline: 15/10/2010"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/secondline"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
+        android:paddingLeft="10sp"
+        android:textColor="#2A2B2E"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/fourthline"
+        android:text="Examination"
+        android:layout_toRightOf="@id/thirdline"
+        android:layout_below="@+id/thirdline"
+        android:textStyle="italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:paddingLeft="10sp"
+        android:textColor="#2A2B2E"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/time"
+        android:text="Examination"
+        android:layout_toRightOf="@id/thirdline"
+        android:layout_below="@+id/secondline"
+        android:textStyle="italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:paddingLeft="10sp"
+        android:textColor="#2A2B2E"
+        android:textSize="12sp" />
 
 </RelativeLayout>
