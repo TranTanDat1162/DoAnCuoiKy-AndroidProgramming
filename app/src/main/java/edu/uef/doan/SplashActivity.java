@@ -31,6 +31,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -39,13 +41,20 @@ public class SplashActivity extends AppCompatActivity {
     TextView app_name;
     FirebaseFirestore db;
     String TAG = "SplashAct";
+    Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        Log.v(TAG,"Starting");
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         addControl();
+        try {
+            setupDir();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         addEvent();
     }
 
@@ -55,7 +64,6 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 ////                Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                 boolean isUserLogged = getBooleanDefaults(getString(R.string.userlogged),SplashActivity.this);
-                Intent i;
                 if(isUserLogged) {
                     db = FirebaseFirestore.getInstance();
                     String id = getStringDefaults(getString(R.string.userid),SplashActivity.this);
@@ -71,15 +79,19 @@ public class SplashActivity extends AppCompatActivity {
                                     user = userDocument.toObject(User.class);
                                     Log.v(TAG,"ID"+ userDocument.getId());
                                     Log.d(TAG, "DocumentSnapshot data: " + userDocument.getData());
+                                    Log.v("Login state","True");
                                 } else {
                                     Log.d(TAG, "No such document");
                                 }
+                                Intent i = new Intent(SplashActivity.this, HomeActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                startActivity(i);
+                                Log.v(TAG,"Task completed");
                             } else {
                                 Log.d(TAG, "get failed with ", task.getException());
                             }
                         }
                     });
-                    Log.v("Login state","True");
                     i = new Intent(SplashActivity.this, HomeActivity.class);
                 }
                 else{
@@ -113,5 +125,9 @@ public class SplashActivity extends AppCompatActivity {
 
         imageView.setAnimation(topAnim);
         app_name.setAnimation(bottomAnim);
+    }
+    private void setupDir() throws IOException {
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/pfp"));
+        Files.createDirectories(Paths.get(getApplicationInfo().dataDir + "/user/assignments"));
     }
 }
