@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,7 +33,10 @@ public class HomeActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private CardView userDetails;
     private ImageView userPfp;
+
+    private ImageButton imgButtonSort;
     private FloatingActionButton create;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +119,14 @@ public class HomeActivity extends AppCompatActivity {
         create.setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, CreateActivity.class);
             startActivity(intent);
+        });
+
+        imgButtonSort = findViewById(R.id.imageButtonSort);
+        imgButtonSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
         });
     }
 
