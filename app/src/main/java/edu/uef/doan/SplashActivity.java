@@ -102,7 +102,6 @@ public class SplashActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    PopulateList.UpdateL(db,SplashActivity.this);
                     i = new Intent(SplashActivity.this, LoginActivity.class);
                 }
 
