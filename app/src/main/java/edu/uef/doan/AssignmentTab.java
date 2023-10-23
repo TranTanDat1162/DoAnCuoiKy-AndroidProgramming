@@ -94,7 +94,7 @@ public class AssignmentTab extends Fragment {
                 Assignment assignment = assignments.getAssignment();
                 item.setTitle(assignment.getTitle());
                 item.setDesc(assignment.getTopic());
-                item.setDate(assignment.getEndDate());
+                item.setDate(assignment.getEndDate() + " - " + assignment.getEndTime());
                 item.setType(assignment.getCategory());
                 rowItems.add(item);
             }
