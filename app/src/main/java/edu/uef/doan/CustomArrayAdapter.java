@@ -57,6 +57,9 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
             convertView.setTag(holder);
         } else
             holder = (ViewHolder) convertView.getTag();
+        holder.btnDelete.setOnClickListener(view -> {
+            
+        });
 
         holder.txtDesc.setText("Task: "+rowItem.getDesc());
         holder.txtTitle.setText(rowItem.getTitle());
@@ -82,6 +85,7 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
                 break;
 //            default:
 //                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
+
         }
         return convertView;
     }
