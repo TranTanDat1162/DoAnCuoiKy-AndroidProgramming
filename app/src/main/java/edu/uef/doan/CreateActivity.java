@@ -107,7 +107,7 @@ public class CreateActivity extends AppCompatActivity {
 
         // Khởi tạo Spinner với các mục "Chọn thể loại", "Essay", "Examination" và "Other"
         tags = new ArrayList<>();
-        tags.add("Chọn thể loại");
+        tags.add("None");
         tags.add("Essay");
         tags.add("Examination");
         tags.add("Other");

@@ -89,9 +89,13 @@ public class AssignmentTab extends Fragment {
 //            bgColor = new Integer[]{0};
             rowItems = new ArrayList<RowItem>();
             for (Object obj : mList) {
+                RowItem item = new RowItem();
                 AssignmentList assignments = (AssignmentList) obj;
                 Assignment assignment = assignments.getAssignment();
-                RowItem item = new RowItem(assignment.getTitle(), assignment.getTopic(), 0);
+                item.setTitle(assignment.getTitle());
+                item.setDesc(assignment.getTopic());
+                item.setDate(assignment.getEndDate());
+                item.setType(assignment.getCategory());
                 rowItems.add(item);
             }
         }

@@ -80,8 +80,8 @@ public class AssignmentSubmittedTab extends Fragment {
 
         rowItems = new ArrayList<RowItem>();
         for (int i = 0; i < SubmittedAssignmentsName.length; i++) {
-            RowItem item = new RowItem(SubmittedAssignmentsName[i], SubmittedAssignmentsDetail[i],bgColor[i]);
-            rowItems.add(item);
+//            RowItem item = new RowItem(SubmittedAssignmentsName[i], SubmittedAssignmentsDetail[i],bgColor[i]);
+//            rowItems.add(item);
         }
         ArrayAdapter<RowItem> mAdapter =
                 new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems);

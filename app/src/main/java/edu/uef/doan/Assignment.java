@@ -37,11 +37,9 @@ public class Assignment {
 
     public void setStartTime(String StartTime) { this.StartTime = StartTime; }
 
-    public String getEndDate() {
-        return EndDate;
-    }
+    public String getEndDate() { return EndDate; }
 
-    public void setEmail(String EndDate) {
+    public void setEndDate(String EndDate) {
         this.EndDate = EndDate;
     }
 

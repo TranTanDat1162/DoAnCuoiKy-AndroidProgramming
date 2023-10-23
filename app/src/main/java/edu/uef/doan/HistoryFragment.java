@@ -77,8 +77,8 @@ public class HistoryFragment extends Fragment {
         lv = (ListView) parentholder.findViewById(R.id.ListViewHistory);
         rowItems = new ArrayList<RowItem>();
         for (int i = 0; i < assignmentsName.length; i++) {
-            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
-            rowItems.add(item);
+//            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
+//            rowItems.add(item);
         }
         ArrayAdapter<RowItem> mAdapter =
                 new CustomArrayAdapter(getContext(),R.id.ListViewHistory,rowItems);

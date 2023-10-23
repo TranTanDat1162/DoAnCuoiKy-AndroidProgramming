@@ -4,11 +4,11 @@ public class RowItem {
     private String title;
     private String desc;
     private int bgcolors;
-    public RowItem(String title, String desc,int bgcolors) {
-        this.title = title;
-        this.desc = desc;
-        this.bgcolors = bgcolors;
-    }
+    private String date;
+    private String type;
+    public RowItem(){
+
+    };
     public int getBgcolors() { return bgcolors; }
     public void setBgcolors(int bgcolors) { this.bgcolors = bgcolors; }
     public String getDesc() {
@@ -23,8 +23,8 @@ public class RowItem {
     public void setTitle(String title) {
         this.title = title;
     }
-    @Override
-    public String toString() {
-        return title + "\n" + desc;
-    }
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date;}
+    public String getType() {return type;}
+    public void setType(String type) {this.type = type;}
 }
