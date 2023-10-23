@@ -134,8 +134,20 @@ public class UserActivity extends AppCompatActivity {
                             // make a copy of image and move it to app's specific folder
                             try {
                                 imageMover();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                            } catch (Exception e) {
+                                StorageReference pfpRef = storageRef.child(userDocument.getId()+"/userpfp.jpg");
+                                File localFile = new File(getApplicationInfo().dataDir + "/user/pfp/userpfp.jpg");
+                                pfpRef.getFile(localFile).addOnSuccessListener(taskSnapshot1 -> {
+                                    // Local temp file has been created
+                                    Intent intent = new Intent(UserActivity.this, HomeActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);
+                                    Log.v("DownloadPfp","pfp downloaded");
+                                }).addOnFailureListener(exception -> {
+                                    // Handle any errors
+                                    Log.v("DownloadPfp","failed");
+                                });
+                                Log.v("ImageMover","Something went wrong, Resolve to download from cloud");
                             }
                             Toast.makeText(UserActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
                         }
@@ -152,7 +164,7 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
-    private void imageMover() throws IOException {
+    private void imageMover() throws Exception {
         String uriPath = getRealPathFromURI(selectedImageUri);
 
         File image =
@@ -245,12 +257,14 @@ public class UserActivity extends AppCompatActivity {
     }
     private String getRealPathFromURI(Uri contentURI) {
         String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = getContentResolver().query(contentURI, filePathColumn, null, null, null);
         if (cursor == null) { // Source is Dropbox or other similar local file path
             result = contentURI.getPath();
         } else {
             cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            int idx = cursor.getColumnIndex(filePathColumn[0]);
             result = cursor.getString(idx);
             cursor.close();
         }
