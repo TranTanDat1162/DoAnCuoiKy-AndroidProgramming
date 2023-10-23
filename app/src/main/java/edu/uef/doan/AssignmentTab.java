@@ -119,7 +119,6 @@ public class AssignmentTab extends Fragment {
                     @Override
                     public View getView(final int position, View convertView, ViewGroup parent) {
                         View inflatedView = super.getView(position, convertView, parent);
-
                         // set a click listener
                         // TODO change "R.id.buttonId" to reference the ID value you set for the button's android:id attribute in foodlist.xml
                         inflatedView.findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
@@ -143,6 +142,15 @@ public class AssignmentTab extends Fragment {
                                             }
                                         });
 //                                Toast.makeText(v.getContext(), "Button 1  clicked for row position=" + selected_item.getId(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        inflatedView.findViewById(R.id.edit_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getActivity(), EditActivity.class);
+                                String i = new String(String.valueOf(position));
+                                intent.putExtra("assignment_pos", i );
+                                startActivity(intent);
                             }
                         });
                         return inflatedView;
