@@ -22,6 +22,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PopulateList {
@@ -43,6 +45,19 @@ public class PopulateList {
                                mList.add(new AssignmentList(document.getId(),document.toObject(Assignment.class)));
                                Log.d(TAG, document.getId() + " => " + document.getData());
                            }
+                           mList.sort(new Comparator<AssignmentList>(){
+                               @Override
+                               public int compare(AssignmentList t0, AssignmentList t1) {
+                                   if(t1.getAssignment().getTitle() == null){
+                                       Log.v("mList","neutral sort");
+                                       return -1;
+                                   }else if(t0.getAssignment().getTitle() == null){
+                                       Log.v("mList","neutral sort");
+                                       return 1;
+                                   }
+                                   return 0;
+                               }
+                           });
                            Log.v(TAG,mList.toString());
                            cxt.startActivity(intent);
                        } else {

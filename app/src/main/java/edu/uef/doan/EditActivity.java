@@ -3,6 +3,7 @@ package edu.uef.doan;
 import static edu.uef.doan.LoginActivity.mList;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
+import static edu.uef.doan.SignupActivity.sdf3;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -41,6 +42,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -142,7 +144,6 @@ public class EditActivity extends AppCompatActivity {
         tags.add("Essay");
         tags.add("Homework");
         tags.add("Other");
-
 
         tagAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tags);
         tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -388,6 +389,7 @@ public class EditActivity extends AppCompatActivity {
     private void updateDataInFirestore(String title, String topic, String startDate, String startTime, String endDate, String endTime, String category) {
         // Lấy ID của người dùng hiện tại từ Firebase Authentication
         String userId = userDocument.getId();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         // Lấy assignmentId từ Intent
         AssignmentList assignment = (AssignmentList) mList.get(Integer.parseInt(value));
@@ -409,6 +411,8 @@ public class EditActivity extends AppCompatActivity {
         updatedData.setEndDate(endDate);
         updatedData.setEndTime(endTime);
         updatedData.setCategory(category);
+        updatedData.setCreateTime(assignment.getAssignment().getCreateTime());
+        updatedData.setSubmitTime(sdf3.format(timestamp));
 
         // Cập nhật dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
         db.collection("users").document(userId)

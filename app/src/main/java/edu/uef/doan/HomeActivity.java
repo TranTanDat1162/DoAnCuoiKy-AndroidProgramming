@@ -51,8 +51,6 @@ public class HomeActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private CardView userDetails;
     private ImageView userPfp;
-
-
     private ImageButton imgButtonSort;
     private FloatingActionButton create;
     @SuppressLint("MissingInflatedId")
@@ -62,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         imgButtonSort = findViewById(R.id.imageButtonSort);
+
         final PopupMenu dropDownMenu = new PopupMenu(HomeActivity.this, imgButtonSort);
         final Menu menu = dropDownMenu.getMenu();
         dropDownMenu.getMenuInflater().inflate(R.menu.sortlist, menu);
@@ -70,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.s11) {
-                    Collections.sort(mList, new Comparator<AssignmentList>(){
+                    Collections.sort(mList.subList(0,mList.size()-1), new Comparator<AssignmentList>(){
                         @Override
                         public int compare(AssignmentList t0, AssignmentList t1) {
                             if(t0.getAssignment().getCategory().equals("Homework"))
@@ -82,10 +81,16 @@ public class HomeActivity extends AppCompatActivity {
                     Log.v("SubMenuClick", "Submenu Item: sort by homework");
                     return true;
                 } else if (itemId == R.id.s12) {
-                    Collections.sort(mList, new Comparator<AssignmentList>(){
+                    Collections.sort(mList.subList(0,mList.size()-1), new Comparator<AssignmentList>(){
                         @Override
                         public int compare(AssignmentList t0, AssignmentList t1) {
-                            int i = t0.getAssignment().getCategory().compareTo(t1.getAssignment().getCategory());
+                            int i;
+                            try {
+                                i = t0.getAssignment().getCategory().compareTo(t1.getAssignment().getCategory());
+                            }
+                            catch (Exception e){
+                                return 0;
+                            }
                             return i;
                         }
                     });
@@ -93,10 +98,16 @@ public class HomeActivity extends AppCompatActivity {
                     Log.v("SubMenuClick", "Submenu Item: sort by essay");
                     return true;
                 } else if (itemId == R.id.s13) {
-                    Collections.sort(mList, new Comparator<AssignmentList>(){
+                    Collections.sort(mList.subList(0,mList.size()-1), new Comparator<AssignmentList>(){
                         @Override
                         public int compare(AssignmentList t0, AssignmentList t1) {
-                            int i = t0.getAssignment().getCategory().compareTo(t1.getAssignment().getCategory());
+                            int i;
+                            try{
+                                i = t0.getAssignment().getCategory().compareTo(t1.getAssignment().getCategory());
+                            }
+                            catch (Exception e){
+                                return 0;
+                            }
                             if (i != 0) return -i;
                             return i;
                         }
@@ -105,7 +116,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.v("SubMenuClick", "Submenu Item: sort by other");
                     return true;
                 } else if (itemId == R.id.s21) {
-                    Collections.sort(mList, new Comparator<AssignmentList>() {
+                    Collections.sort(mList.subList(0,mList.size()-1), new Comparator<AssignmentList>() {
                         @Override
                         public int compare(AssignmentList t0, AssignmentList t1) {
                             DateTimeComparator dateTimeComparator = DateTimeComparator.getInstance();
@@ -137,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.v("SubMenuClick", "Submenu Item: sort by closest DL");
                     return true;
                 } else if (itemId == R.id.s22) {
-                    Collections.sort(mList, new Comparator<AssignmentList>() {
+                    Collections.sort(mList.subList(0,mList.size()-1), new Comparator<AssignmentList>() {
                         @Override
                         public int compare(AssignmentList t0, AssignmentList t1) {
                             DateTimeComparator dateTimeComparator = DateTimeComparator.getInstance();

@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
     static User user = new User();
     static DocumentSnapshot userDocument;
     static List mList = new ArrayList<AssignmentList>();
-
     static FirebaseStorage storage = FirebaseStorage.getInstance();;
     String TAG = "LoginAct";
     // Create a storage reference from our app

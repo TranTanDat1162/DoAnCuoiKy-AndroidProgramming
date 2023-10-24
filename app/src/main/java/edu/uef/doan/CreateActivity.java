@@ -2,6 +2,7 @@ package edu.uef.doan;
 
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
+import static edu.uef.doan.SignupActivity.sdf3;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -40,6 +41,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -318,6 +320,7 @@ public class CreateActivity extends AppCompatActivity {
         // Lấy ID của người dùng hiện tại từ Firebase Authentication
         String id = userDocument.getId();
         db.collection("users").document(id).set(user);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         // Tạo một Map chứa dữ liệu để lưu vào Firestore
         Map<String, Object> assignmentData = new HashMap<>();
@@ -328,6 +331,7 @@ public class CreateActivity extends AppCompatActivity {
         assignmentData.put("endDate", endDate);
         assignmentData.put("endTime", endTime);
         assignmentData.put("category", category);
+        assignmentData.put("createTime",sdf3.format(timestamp));
 
         // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
         db.collection("users").document(id).collection("assignment")

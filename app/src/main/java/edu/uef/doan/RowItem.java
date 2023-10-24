@@ -28,6 +28,11 @@ public class RowItem {
 
     }
 
+    public RowItem(String topic, int i, String startTime) {
+        this.title = topic;
+        this.bgcolors = i;
+        this.date = startTime;
+    }
 
 
     public Date getDayNotification() {

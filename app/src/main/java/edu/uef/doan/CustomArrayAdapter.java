@@ -2,6 +2,7 @@ package edu.uef.doan;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,8 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         RowItem rowItem = getItem(position);
+//        if(rowItem.getType() == null)
+//            return convertView;
 
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -65,27 +68,32 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
         holder.txtTitle.setText(rowItem.getTitle());
         holder.txtDate.setText("Deadline: "+ rowItem.getDate());
         holder.txtType.setText(rowItem.getType());
-        switch(rowItem.getType()){
-            case "Essay":
-                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
-                holder.btnDelete.setVisibility(View.GONE);
-                break;
-            case "Homework":
-                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor1));
-                holder.btnDelete.setVisibility(View.GONE);
-                break;
-            case "None":
-                holder.txtType.setText("");
-                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor2));
-                holder.btnDelete.setVisibility(View.VISIBLE);
-                break;
-            default:
-                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor3));
-                holder.btnDelete.setVisibility(View.GONE);
-                break;
+        try {
+            switch (rowItem.getType()) {
+                case "Essay":
+                    holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
+                    holder.btnDelete.setVisibility(View.GONE);
+                    break;
+                case "Homework":
+                    holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor1));
+                    holder.btnDelete.setVisibility(View.GONE);
+                    break;
+                case "None":
+                    holder.txtType.setText("");
+                    holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor2));
+                    holder.btnDelete.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor3));
+                    holder.btnDelete.setVisibility(View.GONE);
+                    break;
 //            default:
 //                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
 
+            }
+        }
+        catch (Exception e){
+            Log.v("mAdapeter","No type");
         }
         return convertView;
     }

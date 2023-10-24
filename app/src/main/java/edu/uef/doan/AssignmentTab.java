@@ -89,11 +89,6 @@ public class AssignmentTab extends Fragment {
         parentholder = inflater.inflate(R.layout.fragment_assignment_tab, container, false);
         lv = (ListView) parentholder.findViewById(R.id.ListViewAssignment);
         try {
-//            assignments = (AssignmentList) mList.get(0);
-//            assignment = (Assignment) assignments.getAssignment();
-//            assignmentsName = new String[]{assignment.getTitle()};
-//            assignmentsDetail = new String[]{assignment.getTopic()};
-//            bgColor = new Integer[]{0};
             rowItems = new ArrayList<RowItem>();
             for (Object obj : mList) {
                 RowItem item = new RowItem();
@@ -115,7 +110,7 @@ public class AssignmentTab extends Fragment {
 //            rowItems.add(item);
 //        }
         ArrayAdapter<RowItem> mAdapter =
-                new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems){
+                new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems.subList(0,rowItems.size()-1)){
                     @Override
                     public View getView(final int position, View convertView, ViewGroup parent) {
                         View inflatedView = super.getView(position, convertView, parent);

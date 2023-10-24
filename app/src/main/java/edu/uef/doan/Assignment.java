@@ -9,6 +9,13 @@ public class Assignment {
     private String EndTime;
     private String Category;
 
+    public void setCreateTime(String createTime) {
+        CreateTime = createTime;
+    }
+
+    private String CreateTime;
+    private String SubmitTime;
+
     public String getTitle() {return Title;}
 
     public void setTitle(String Title) {
@@ -58,6 +65,11 @@ public class Assignment {
     public void setCategory(String Category) {
         this.Category = Category;
     }
+    public String getCreateTime() { return CreateTime; }
+
+    public String getSubmitTime() { return SubmitTime; }
+
+    public void setSubmitTime(String SubmitTime) { this.SubmitTime = SubmitTime;}
     public Assignment() {
     }
 

@@ -1,5 +1,8 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.user;
+import static edu.uef.doan.LoginActivity.userDocument;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +30,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +42,9 @@ public class SignupActivity extends AppCompatActivity {
     EditText etUsername, etPassword, etConfirmPassword;
 
     Button btnSignup;
+    DocumentReference docRef;
+    static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
 
     // Code using Cloud Firebase
     FirebaseFirestore db;
@@ -110,6 +118,8 @@ public class SignupActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onSuccess(DocumentReference documentReference) {
                                                                 AnimationForSignUpSuccess();
+                                                                docRef = documentReference;
+                                                                firstMsg();
                                                                 Toast.makeText(SignupActivity.this, "User added successfully", Toast.LENGTH_SHORT).show();
 
                                                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
@@ -157,5 +167,28 @@ public class SignupActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnSignup = findViewById(R.id.btnSignup);
+    }
+    private void firstMsg(){
+        // Lấy ID của người dùng hiện tại từ Firebase Authentication
+        String id = docRef.getId();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        // Tạo một Object chứa dữ liệu để lưu vào Firestore
+        Assignment assignmentData = new Assignment();
+        assignmentData.setTopic("Welcome to Homework manager");
+        assignmentData.setCreateTime(String.valueOf(timestamp.toString()));
+
+        // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
+        db.collection("users").document(id).collection("assignment")
+                .add(assignmentData)
+                .addOnSuccessListener(documentReference -> {
+                    // Xử lý khi dữ liệu được lưu thành công
+                    Toast.makeText(SignupActivity.this, "Dữ liệu đã được lưu thành công vào Firestore.", Toast.LENGTH_SHORT).show();
+                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi lưu dữ liệu thành công
+                })
+                .addOnFailureListener(e -> {
+                    // Xử lý khi dữ liệu không thể được lưu vào Firestore
+                    Toast.makeText(SignupActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }
