@@ -1,7 +1,6 @@
 package edu.uef.doan;
 
-import static android.content.ContentValues.TAG;
-import static edu.uef.doan.LoginActivity.storage;
+import static edu.uef.doan.LoginActivity.mList;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
 
@@ -16,7 +15,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +40,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,11 +51,18 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 
-public class CreateActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
     private Calendar startDateTime = Calendar.getInstance();
     private Calendar endDateTime = Calendar.getInstance();
     private Spinner tagSpinner;
     private EditText customTagEditText;
+    private EditText title;
+    private EditText topic;
+    private TextView startDate;
+    private TextView startTime;
+    private TextView endDate;
+    private TextView endTime;
+    private Spinner category;
     private LinearLayout customTagLayout;
     private Button okButton;
     private TextView selectionPrompt;
@@ -75,6 +78,7 @@ public class CreateActivity extends AppCompatActivity {
     private TextView attachmentTextView;
     // Khai báo biến cho Firestore
     private FirebaseFirestore db;
+    String value;
 
     private String getMimeType(String filePath) {
         String type = null;
@@ -108,7 +112,29 @@ public class CreateActivity extends AppCompatActivity {
         okButton = findViewById(R.id.okButton);
         selectionPrompt = findViewById(R.id.selectionPrompt);
         btn1=  findViewById(R.id.createnew_btn);
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            value = extras.getString("assignment_pos");
+        }
+        AssignmentList selected_assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+        title = (EditText) findViewById(R.id.editText1);
+        title.setText(selected_assignment.getAssignment().getTitle());
+        topic = (EditText) findViewById(R.id.editText2);
+        topic.setText(selected_assignment.getAssignment().getTopic());
+        startDate = (TextView) findViewById(R.id.displayStartDateTextView);
+        startDate.setText(selected_assignment.getAssignment().getStartDate());
+        startTime = (TextView) findViewById(R.id.displayStartTimeTextView);
+        startTime.setText(selected_assignment.getAssignment().getStartTime());
+        endDate = (TextView) findViewById(R.id.displayEndDateTextView);
+        endDate.setText(selected_assignment.getAssignment().getEndDate());
+        endTime = (TextView) findViewById(R.id.displayEndTimeTextView);
+        endTime.setText(selected_assignment.getAssignment().getEndTime());
+        category = (android.widget.Spinner) findViewById(R.id.tagSpinner);
+        String categoryString = selected_assignment.getAssignment().getCategory();
+        category = (Spinner) findViewById(R.id.tagSpinner);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{categoryString});
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        category.setAdapter(categoryAdapter);
 
         // Khởi tạo Spinner với các mục "Chọn thể loại", "Essay", "Examination" và "Other"
         tags = new ArrayList<>();
@@ -130,6 +156,7 @@ public class CreateActivity extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 // Lấy dữ liệu từ các trường nhập liệu
                 String title = ((EditText) findViewById(R.id.editText1)).getText().toString();
                 String topic = ((EditText) findViewById(R.id.editText2)).getText().toString();
@@ -146,10 +173,10 @@ public class CreateActivity extends AppCompatActivity {
 
                 // Kiểm tra xem người dùng đã nhập đủ thông tin chưa
                 if (title.isEmpty() || topic.isEmpty() || startDate.isEmpty() || startTime.isEmpty() || endDate.isEmpty() || endTime.isEmpty() || category.isEmpty()) {
-                    Toast.makeText(CreateActivity.this, "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditActivity.this, "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Lưu dữ liệu vào Firestore
-                    saveDataToFirestore(title, topic, startDate, startTime, endDate, endTime, category);
+                    updateDataInFirestore(title, topic, startDate, startTime, endDate, endTime, category);
                 }
             }
         });
@@ -176,26 +203,34 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
         // Bắt sự kiện khi nhấn nút OK
-        okButton.setOnClickListener(v -> {
-            // Lấy tag tùy chỉnh từ EditText
-            String customTag = customTagEditText.getText().toString().trim();
-            if (!customTag.isEmpty()) {
-                // Thêm tag tùy chỉnh vào Spinner
-                tags.add(customTag);
-                tagAdapter.notifyDataSetChanged();
-                // Chọn tag tùy chỉnh
-                tagSpinner.setSelection(tagAdapter.getCount() - 1);
-                // Ẩn EditText và nút OK
-                customTagLayout.setVisibility(View.GONE);
-                // Reset EditText
-                customTagEditText.setText("");
-                // Ẩn câu chú thích
-                selectionPrompt.setVisibility(View.GONE);
-                Toast.makeText(CreateActivity.this, "Tag đã được thêm vào Spinner.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(CreateActivity.this, "Vui lòng nhập tag trước khi nhấn OK.", Toast.LENGTH_SHORT).show();
+        // Bắt sự kiện khi nhấn nút "Done"
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Lấy dữ liệu từ các trường nhập liệu
+                String title = ((EditText) findViewById(R.id.editText1)).getText().toString();
+                String topic = ((EditText) findViewById(R.id.editText2)).getText().toString();
+                String startDate = ((TextView) findViewById(R.id.displayStartDateTextView)).getText().toString();
+                String startTime = ((TextView) findViewById(R.id.displayStartTimeTextView)).getText().toString();
+                String endDate = ((TextView) findViewById(R.id.displayEndDateTextView)).getText().toString();
+                String endTime = ((TextView) findViewById(R.id.displayEndTimeTextView)).getText().toString();
+                String category = tagSpinner.getSelectedItem().toString();
+
+                // Kiểm tra xem đã chọn "Other" từ Spinner chưa
+                if (category.equals("Other")) {
+                    category = customTagEditText.getText().toString();
+                }
+
+                // Kiểm tra xem người dùng đã nhập đủ thông tin chưa
+                if (title.isEmpty() || topic.isEmpty() || startDate.isEmpty() || startTime.isEmpty() || endDate.isEmpty() || endTime.isEmpty() || category.isEmpty()) {
+                    Toast.makeText(EditActivity.this, "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Cập nhật dữ liệu vào Firestore
+                    updateDataInFirestore(title, topic, startDate, startTime, endDate, endTime, category);
+                }
             }
         });
+
 
 //        btn1.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -209,7 +244,7 @@ public class CreateActivity extends AppCompatActivity {
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateActivity.this, HomeActivity.class);
+                Intent intent = new Intent(EditActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });
@@ -217,7 +252,7 @@ public class CreateActivity extends AppCompatActivity {
         startDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -241,7 +276,7 @@ public class CreateActivity extends AppCompatActivity {
         startTimePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -266,7 +301,7 @@ public class CreateActivity extends AppCompatActivity {
         endDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -291,7 +326,7 @@ public class CreateActivity extends AppCompatActivity {
         endTimePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -319,82 +354,75 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
     }
-    private void saveDataToFirestore(String title, String topic, String startDate, String startTime, String endDate, String endTime, String category) {
+//    private void saveDataToFirestore(String title, String topic, String startDate, String startTime, String endDate, String endTime, String category) {
+//        // Lấy ID của người dùng hiện tại từ Firebase Authentication
+//        String id = userDocument.getId();
+//        db.collection("users").document(id).set(user);
+//
+//        // Tạo một Map chứa dữ liệu để lưu vào Firestore
+//        Map<String, Object> assignmentData = new HashMap<>();
+//        assignmentData.put("title", title);
+//        assignmentData.put("topic", topic  );
+//        assignmentData.put("startDate", startDate);
+//        assignmentData.put("startTime", startTime);
+//        assignmentData.put("endDate", endDate);
+//        assignmentData.put("endTime", endTime);
+//        assignmentData.put("category", category);
+//
+//        // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
+//        db.collection("users").document(id).collection("assignment")
+//                .add(assignmentData)
+//                .addOnSuccessListener(documentReference -> {
+//                    // Xử lý khi dữ liệu được lưu thành công
+//                    Toast.makeText(EditActivity.this, "Dữ liệu đã được lưu thành công vào Firestore.", Toast.LENGTH_SHORT).show();
+//                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi lưu dữ liệu thành công
+//                    PopulateList.UpdateL(db,EditActivity.this);
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Xử lý khi dữ liệu không thể được lưu vào Firestore
+//                    Toast.makeText(EditActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                });
+//    }
+
+    // Phương thức cập nhật dữ liệu vào Firestore
+    private void updateDataInFirestore(String title, String topic, String startDate, String startTime, String endDate, String endTime, String category) {
         // Lấy ID của người dùng hiện tại từ Firebase Authentication
-        String id = userDocument.getId();
-        db.collection("users").document(id).set(user);
+        String userId = userDocument.getId();
 
-        // Tạo một Map chứa dữ liệu để lưu vào Firestore
-        Map<String, Object> assignmentData = new HashMap<>();
-        assignmentData.put("title", title);
-        assignmentData.put("topic", topic  );
-        assignmentData.put("startDate", startDate);
-        assignmentData.put("startTime", startTime);
-        assignmentData.put("endDate", endDate);
-        assignmentData.put("endTime", endTime);
-        assignmentData.put("category", category);
-        assignmentData.put("numAttachments", selectedFiles.size());
+        // Lấy assignmentId từ Intent
+        AssignmentList assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+        String assignmentId = assignment.getId();
+        // Tạo một Map chứa dữ liệu để cập nhật vào Firestore
+//        Map<String, Object> updatedData = new HashMap<>();
+//        updatedData.put("title", title);
+//        updatedData.put("topic", topic);
+//        updatedData.put("startDate", startDate);
+//        updatedData.put("startTime", startTime);
+//        updatedData.put("endDate", endDate);
+//        updatedData.put("endTime", endTime);
+//        updatedData.put("category", category);
+        Assignment updatedData = new Assignment();
+        updatedData.setTitle(title);
+        updatedData.setTopic(topic);
+        updatedData.setStartDate(startDate);
+        updatedData.setStartTime(startTime);
+        updatedData.setEndDate(endDate);
+        updatedData.setEndTime(endTime);
+        updatedData.setCategory(category);
 
-
-        // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
-        db.collection("users").document(id).collection("assignment")
-                .add(assignmentData)
-                .addOnSuccessListener(documentReference -> {
-                    String assignmentId = documentReference.getId();
-
-                    // Lưu trữ tệp đính kèm vào Firebase Storage
-                    for (int i = 0; i < selectedFiles.size(); i++) {
-                        Uri fileUri = selectedFiles.get(i);
-                        String fileName = getFileName(fileUri);
-
-                        // Tạo đường dẫn đến thư mục lưu trữ tệp đính kèm
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
-                                .child(id)
-                                .child("attachments")
-                                .child(assignmentId)
-                                .child(fileName);
-
-                        // Upload tệp đính kèm lên Firebase Storage
-                        storageRef.putFile(fileUri)
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    // Lấy URL của tệp đính kèm đã được tải lên
-                                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                        // Lưu thông tin tên tệp và URL vào Firestore
-                                        saveAttachmentInfoToFirestore(assignmentId, fileName, uri.toString());
-                                    });
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Xử lý khi tệp đính kèm không thể được tải lên Firebase Storage
-                                    Toast.makeText(CreateActivity.this, "Lỗi khi tải tệp lên Firebase Storage: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                });
-                    }
-
-                    // Xử lý khi dữ liệu được lưu thành công
-                    Toast.makeText(CreateActivity.this, "Dữ liệu và tệp đính kèm đã được lưu thành công.", Toast.LENGTH_SHORT).show();
+        // Cập nhật dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
+        db.collection("users").document(userId)
+                .collection("assignment").document(assignmentId)
+                .set(updatedData)
+                .addOnSuccessListener(aVoid -> {
+                    // Xử lý khi dữ liệu được cập nhật thành công
+                    Toast.makeText(EditActivity.this, "Dữ liệu đã được cập nhật thành công.", Toast.LENGTH_SHORT).show();
+                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi cập nhật dữ liệu thành công
+                    PopulateList.UpdateL(db, EditActivity.this);
                 })
                 .addOnFailureListener(e -> {
-                    // Xử lý khi dữ liệu không thể được lưu vào Firestore
-                    Toast.makeText(CreateActivity.this, "Lỗi khi lưu dữ liệu vào Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
-    private void saveAttachmentInfoToFirestore(String name, String fileName, String fileUrl) {
-        String id = userDocument.getId();
-        db.collection("users").document(id).set(user);
-        // Tạo một Map chứa thông tin về tệp đính kèm
-        Map<String, Object> attachmentInfo = new HashMap<>();
-        attachmentInfo.put("fileName", fileName);
-        attachmentInfo.put("fileUrl", fileUrl);
-
-        // Lưu thông tin tệp đính kèm vào Firestore trong bảng "attachments"
-        db.collection("users").document(id).collection("assignment")
-                .add(attachmentInfo)
-                .addOnSuccessListener(documentReference -> {
-                    // Xử lý khi thông tin tệp đính kèm được lưu thành công
-                    Log.d(TAG, "Tệp đính kèm được lưu thành công: " + documentReference.getId());
-                })
-                .addOnFailureListener(e -> {
-                    // Xử lý khi thông tin tệp đính kèm không thể được lưu vào Firestore
-                    Log.w(TAG, "Lỗi khi lưu thông tin tệp đính kèm vào Firestore", e);
+                    // Xử lý khi dữ liệu không thể được cập nhật vào Firestore
+                    Toast.makeText(EditActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -480,7 +508,7 @@ public class CreateActivity extends AppCompatActivity {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(CreateActivity.this, "Không có ứng dụng nào có thể mở file này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditActivity.this, "Không có ứng dụng nào có thể mở file này", Toast.LENGTH_SHORT).show();
         }
     }
 
