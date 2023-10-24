@@ -31,12 +31,18 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import org.joda.time.DateTimeComparator;
+
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
     private ListView lv;
@@ -67,23 +73,99 @@ public class HomeActivity extends AppCompatActivity {
                     Collections.sort(mList, new Comparator<AssignmentList>(){
                         @Override
                         public int compare(AssignmentList t0, AssignmentList t1) {
-                            return t0.getAssignment().getTitle().compareTo(t1.getAssignment().getTitle());
+                            if(t0.getAssignment().getCategory().equals("Homework"))
+                                return -1;
+                            return 1;
                         }
                     });
                     recreate();
-                    Log.v("SubMenuClick", "Submenu Item: s11");
+                    Log.v("SubMenuClick", "Submenu Item: sort by homework");
                     return true;
                 } else if (itemId == R.id.s12) {
-                    Log.v("SubMenuClick", "Submenu Item: s12");
+                    Collections.sort(mList, new Comparator<AssignmentList>(){
+                        @Override
+                        public int compare(AssignmentList t0, AssignmentList t1) {
+                            int i = t0.getAssignment().getCategory().compareTo(t1.getAssignment().getCategory());
+                            return i;
+                        }
+                    });
+                    recreate();
+                    Log.v("SubMenuClick", "Submenu Item: sort by essay");
                     return true;
                 } else if (itemId == R.id.s13) {
-                    Log.v("SubMenuClick", "Submenu Item: s13");
+                    Collections.sort(mList, new Comparator<AssignmentList>(){
+                        @Override
+                        public int compare(AssignmentList t0, AssignmentList t1) {
+                            int i = t0.getAssignment().getCategory().compareTo(t1.getAssignment().getCategory());
+                            if (i != 0) return -i;
+                            return i;
+                        }
+                    });
+                    recreate();
+                    Log.v("SubMenuClick", "Submenu Item: sort by other");
                     return true;
                 } else if (itemId == R.id.s21) {
-                    Log.v("SubMenuClick", "Submenu Item: s21");
+                    Collections.sort(mList, new Comparator<AssignmentList>() {
+                        @Override
+                        public int compare(AssignmentList t0, AssignmentList t1) {
+                            DateTimeComparator dateTimeComparator = DateTimeComparator.getInstance();
+                            Date date1 = null;
+                            Date date0 = null;
+                            String temp = t0.getAssignment().getEndDate() + t0.getAssignment().getEndTime();
+                            try {
+                                date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(t0.getAssignment().getEndDate() +" "+ t0.getAssignment().getEndTime());
+                                date0 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(t1.getAssignment().getEndDate() +" "+ t1.getAssignment().getEndTime());
+                            } catch (ParseException e) {
+                                Log.e("Sort time","Something went wrong sorting nearest");
+                                return 0;
+                            }
+                            int retVal = dateTimeComparator.compare(date1, date0);
+//                            Log.v("retVal",String.valueOf(retVal));
+                            if(retVal == 0)
+                                //both dates are equal
+                                return 0;
+                            else if(retVal < 0)
+                                //myDateOne is before myDateTwo
+                                return 1;
+                            else if(retVal > 0)
+                                //myDateOne is after myDateTwo
+                                return -1;
+                            return 0;
+                        }
+                    });
+                    recreate();
+                    Log.v("SubMenuClick", "Submenu Item: sort by closest DL");
                     return true;
                 } else if (itemId == R.id.s22) {
-                    Log.v("SubMenuClick", "Submenu Item: s22");
+                    Collections.sort(mList, new Comparator<AssignmentList>() {
+                        @Override
+                        public int compare(AssignmentList t0, AssignmentList t1) {
+                            DateTimeComparator dateTimeComparator = DateTimeComparator.getInstance();
+                            Date date1 = null;
+                            Date date0 = null;
+                            try {
+                                date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(t0.getAssignment().getEndDate() +" "+ t0.getAssignment().getEndTime());
+                                date0 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(t1.getAssignment().getEndDate() +" "+ t1.getAssignment().getEndTime());
+                            } catch (ParseException e) {
+                                Log.e("Sort time","Something went wrong sorting furthest");
+                                return 0;
+                            }
+                            int retVal = dateTimeComparator.compare(date0, date1);
+//                            Log.v("retVal",String.valueOf(retVal));
+                            if(retVal == 0)
+                                //both dates are equal
+                                return 0;
+                            else if(retVal < 0)
+                                //myDateOne is before myDateTwo
+                                return 1;
+                            else if(retVal > 0)
+                                //myDateOne is after myDateTwo
+                                return -1;
+                            return 0;
+                        }
+                    });
+                    recreate();
+                    Log.v("SubMenuClick", "Submenu Item: sort by furthest DL");
                     return true;
                 }
                 return false;

@@ -48,6 +48,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("commons-io:commons-io:2.6")
+    implementation ("joda-time:joda-time:2.9.9")
+
 
     // For Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))

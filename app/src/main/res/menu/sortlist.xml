@@ -6,7 +6,7 @@
 
     <item android:id="@+id/i1" android:title="Sort by type" app:showAsAction="never">
         <menu>
-            <item android:id="@+id/s11" android:title="Examination" app:showAsAction="ifRoom|withText" />
+            <item android:id="@+id/s11" android:title="Homework" app:showAsAction="ifRoom|withText" />
             <item android:id="@+id/s12" android:title="Essay" app:showAsAction="ifRoom|withText" />
             <item android:id="@+id/s13" android:title="Other" app:showAsAction="ifRoom|withText" />
         </menu>
