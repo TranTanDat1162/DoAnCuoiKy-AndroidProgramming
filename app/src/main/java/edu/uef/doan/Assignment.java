@@ -9,6 +9,10 @@ public class Assignment {
     private String EndTime;
     private String Category;
 
+    public void setEndDate(String endDate) {
+        EndDate = endDate;
+    }
+
     public String getTitle() {return Title;}
 
     public void setTitle(String Title) {
