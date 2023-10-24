@@ -76,11 +76,11 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
                 break;
             case "None":
                 holder.txtType.setText("");
-                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor1));
+                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor2));
                 holder.btnDelete.setVisibility(View.VISIBLE);
                 break;
             default:
-                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor2));
+                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor3));
                 holder.btnDelete.setVisibility(View.GONE);
                 break;
 //            default:
