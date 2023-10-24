@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (username.isEmpty())
                 {
                     AnimationForLoginFail();
-                    Toast.makeText(LoginActivity.this, "Please field username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Please fill username", Toast.LENGTH_SHORT).show();
                 }
 
                 else {

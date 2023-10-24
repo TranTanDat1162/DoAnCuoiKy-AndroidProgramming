@@ -386,7 +386,7 @@ public class EditActivity extends AppCompatActivity {
 //    }
 
     // Phương thức cập nhật dữ liệu vào Firestore
-    private void updateDataInFirestore(String title, String topic, String startDate, String startTime, String endDate, String endTime, String category) {
+    private void updateDataInFirestore(String title, String topic, String startDate, String startTime, String enddate, String endTime, String category) {
         // Lấy ID của người dùng hiện tại từ Firebase Authentication
         String userId = userDocument.getId();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -408,7 +408,7 @@ public class EditActivity extends AppCompatActivity {
         updatedData.setTopic(topic);
         updatedData.setStartDate(startDate);
         updatedData.setStartTime(startTime);
-        updatedData.setEndDate(endDate);
+        updatedData.setEndDate(enddate);
         updatedData.setEndTime(endTime);
         updatedData.setCategory(category);
         updatedData.setCreateTime(assignment.getAssignment().getCreateTime());

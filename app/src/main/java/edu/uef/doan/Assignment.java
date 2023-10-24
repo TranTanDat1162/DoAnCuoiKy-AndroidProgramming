@@ -8,11 +8,6 @@ public class Assignment {
     private String EndDate;
     private String EndTime;
     private String Category;
-
-    public void setCreateTime(String createTime) {
-        CreateTime = createTime;
-    }
-
     private String CreateTime;
     private String SubmitTime;
 
@@ -45,10 +40,6 @@ public class Assignment {
     public void setStartTime(String StartTime) { this.StartTime = StartTime; }
 
     public String getEndDate() { return EndDate; }
-
-    public void setEndDate(String EndDate) {
-        this.EndDate = EndDate;
-    }
 
     public String getEndTime() {
         return EndTime;
