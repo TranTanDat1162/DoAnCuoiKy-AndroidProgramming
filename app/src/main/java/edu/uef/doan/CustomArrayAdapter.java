@@ -65,6 +65,7 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
         holder.txtTitle.setText(rowItem.getTitle());
         holder.txtDate.setText("Deadline: "+ rowItem.getDate());
         holder.txtType.setText(rowItem.getType());
+
         switch(rowItem.getType()){
             case "Essay":
                 holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));

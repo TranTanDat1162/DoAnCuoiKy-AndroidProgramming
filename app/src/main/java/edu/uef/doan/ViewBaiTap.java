@@ -1,5 +1,9 @@
 package edu.uef.doan;
 
+import static edu.uef.doan.LoginActivity.mList;
+import static edu.uef.doan.LoginActivity.user;
+import static edu.uef.doan.LoginActivity.userDocument;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,28 +34,46 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ViewBaiTap extends AppCompatActivity {
     private static final int PICK_FILES_REQUEST_CODE = 1;
 
     private TextView attachmentTextView;
 
+    private TextView category;
+    private TextView task;
+
     private List<Uri> selectedFiles = new ArrayList<>(); // Danh sách các tệp đã chọn
     private List<String> selectedFileNames = new ArrayList<>(); // Danh sách các tên tệp đã chọn
 
     private ImageButton returnButton, attachmentButton;
+
+    private Button buttonDone;
+
+    String value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_bai_tap);
 
-        addControl();
-        addEvent();
-    }
+        returnButton = findViewById(R.id.returnButton);
+        attachmentButton = findViewById(R.id.attachmentButton2);
+        attachmentTextView = findViewById(R.id.attachmentTextView2);
+        buttonDone = findViewById(R.id.btnDone);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            value = extras.getString("assignment_pos");
+        }
+        AssignmentList selected_assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+        category = findViewById(R.id.textViewCategory);
+        category.setText(selected_assignment.getAssignment().getCategory());
+        task = findViewById(R.id.textViewTask);
+        task.setText(selected_assignment.getAssignment().getTopic());
 
-    private void addEvent() {
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +88,24 @@ public class ViewBaiTap extends AppCompatActivity {
                 openFilePicker();
             }
         });
+
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String textViewCategory =  ((TextView) findViewById(R.id.textViewCategory)).getText().toString();
+                String textViewTask = ((TextView) findViewById(R.id.textViewTask)).getText().toString();
+
+                updateDataInFirestore(textViewCategory, textViewTask);
+            }
+        });
+    }
+    private void updateDataInFirestore(String textViewCategory, String textViewTask) {
+        // Lấy ID của người dùng hiện tại từ Firebase Authentication
+        String id = userDocument.getId();
+
+        // Lấy assignmentId từ Intent
+        AssignmentList assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+        String assignmentId = assignment.getId();
     }
 
     private void openFilePicker() {
@@ -97,7 +139,6 @@ public class ViewBaiTap extends AppCompatActivity {
         }
 
         // Xử lý khi người dùng nhấp vào TextView để kiểm tra danh sách các tệp đã chọn
-
 
         attachmentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,10 +303,4 @@ public class ViewBaiTap extends AppCompatActivity {
         }
     }
 
-
-    private void addControl() {
-        returnButton = findViewById(R.id.returnButton);
-        attachmentButton = findViewById(R.id.attachmentButton2);
-        attachmentTextView = findViewById(R.id.attachmentTextView2);
-    }
 }

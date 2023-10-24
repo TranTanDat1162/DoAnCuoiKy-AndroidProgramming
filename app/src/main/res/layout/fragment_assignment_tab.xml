@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AssignmentTab">
+    android:clickable="true"
+    tools:context=".AssignmentTab"
+    >
 
     <ListView
     android:id="@+id/ListViewAssignment"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:divider="@null"
+    android:descendantFocusability="blocksDescendants"
     android:dividerHeight="10.0sp"/>
 
 </FrameLayout>

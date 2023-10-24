@@ -43,10 +43,6 @@ public class Assignment {
 
     public String getEndDate() { return EndDate; }
 
-    public void setEndDate(String EndDate) {
-        this.EndDate = EndDate;
-    }
-
     public String getEndTime() {
         return EndTime;
     }

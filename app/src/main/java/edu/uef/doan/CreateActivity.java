@@ -341,7 +341,7 @@ public class CreateActivity extends AppCompatActivity {
                 .add(assignmentData)
                 .addOnSuccessListener(documentReference -> {
                     String assignmentId = documentReference.getId();
-
+    
                     // Lưu trữ tệp đính kèm vào Firebase Storage
                     for (int i = 0; i < selectedFiles.size(); i++) {
                         Uri fileUri = selectedFiles.get(i);

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,6 +115,17 @@ public class AssignmentTab extends Fragment {
 //            RowItem item = new RowItem(assignmentsName[i], assignmentsDetail[i],bgColor[i]);
 //            rowItems.add(item);
 //        }
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position
+                    , long l) {
+                Log.v("listview","item clicked");
+                Intent intent = new Intent(getActivity(), ViewBaiTap.class);
+                String i = new String(String.valueOf(position));
+                intent.putExtra("assignment_pos", i );
+                startActivity(intent);
+            }
+        });
         ArrayAdapter<RowItem> mAdapter =
                 new CustomArrayAdapter(getContext(),R.id.assignmenttab_layout,rowItems){
                     @Override
@@ -121,7 +133,9 @@ public class AssignmentTab extends Fragment {
                         View inflatedView = super.getView(position, convertView, parent);
                         // set a click listener
                         // TODO change "R.id.buttonId" to reference the ID value you set for the button's android:id attribute in foodlist.xml
-                        inflatedView.findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
+                        ImageButton deletebtn = inflatedView.findViewById(R.id.delete_btn);
+                        deletebtn.setFocusable(false);
+                        deletebtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 AssignmentList selected_item_id = (AssignmentList) mList.get(position);
@@ -144,7 +158,9 @@ public class AssignmentTab extends Fragment {
 //                                Toast.makeText(v.getContext(), "Button 1  clicked for row position=" + selected_item.getId(), Toast.LENGTH_SHORT).show();
                             }
                         });
-                        inflatedView.findViewById(R.id.edit_btn).setOnClickListener(new View.OnClickListener() {
+                        ImageButton editbtn = inflatedView.findViewById(R.id.edit_btn);
+                        editbtn.setFocusable(false);
+                        editbtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(getActivity(), EditActivity.class);
@@ -158,14 +174,7 @@ public class AssignmentTab extends Fragment {
                     }
                 };
         lv.setAdapter(mAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position
-                    , long l) {
-                Intent intent = new Intent(getActivity(), ViewBaiTap.class);
-                startActivity(intent);
-            }
-        });
+
         // Inflate the layout for this fragment
         return parentholder;
 
