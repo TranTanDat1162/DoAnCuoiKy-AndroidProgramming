@@ -5,6 +5,11 @@ public class Assignment {
     private String Topic;
     private String StartDate;
     private String StartTime;
+
+    public void setEndDate(String endDate) {
+        EndDate = endDate;
+    }
+
     private String EndDate;
     private String EndTime;
     private String Category;
@@ -67,5 +72,9 @@ public class Assignment {
     public Assignment(String Title, String Topic) {
         this.Title = Title;
         this.Topic = Topic;
+    }
+
+    public void setCreateTime(String CreateTime) {
+        this.CreateTime = CreateTime;
     }
 }
