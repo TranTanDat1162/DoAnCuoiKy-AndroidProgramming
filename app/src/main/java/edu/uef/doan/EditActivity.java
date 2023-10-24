@@ -140,7 +140,7 @@ public class EditActivity extends AppCompatActivity {
         tags = new ArrayList<>();
         tags.add("None");
         tags.add("Essay");
-        tags.add("Examination");
+        tags.add("Homework");
         tags.add("Other");
 
 

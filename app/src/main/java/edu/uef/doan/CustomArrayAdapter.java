@@ -70,7 +70,7 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
                 holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
                 holder.btnDelete.setVisibility(View.GONE);
                 break;
-            case "Examination":
+            case "Homework":
                 holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor1));
                 holder.btnDelete.setVisibility(View.GONE);
                 break;

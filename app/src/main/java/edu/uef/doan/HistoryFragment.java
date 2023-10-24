@@ -37,7 +37,7 @@ public class HistoryFragment extends Fragment {
     View parentholder;
     Date[] dates ={new Date(), new Date()};
 //    LocalTime[] times = { LocalTime.now() , LocalTime.now()};
-    String[] descriptions ={"Chao mung ban den voi binh nguyen vo tan ","Yeu em Cuonggg"};
+    String[] descriptions ={"Đã tạo bài tập IT_03 ","Đã nộp bài tập IT_03"};
     Integer[]bgColor={0,1,2,0};
     List<RowItem> rowItems;
 
