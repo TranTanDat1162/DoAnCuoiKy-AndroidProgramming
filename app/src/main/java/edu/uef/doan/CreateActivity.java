@@ -175,7 +175,6 @@ public class CreateActivity extends AppCompatActivity {
                 selectionPrompt.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
             }
 
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Nothing to do here

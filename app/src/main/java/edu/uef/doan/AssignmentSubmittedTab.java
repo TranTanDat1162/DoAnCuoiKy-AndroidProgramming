@@ -39,6 +39,8 @@ public class AssignmentSubmittedTab extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    static List<Integer> AssignmentTabList;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -89,15 +91,19 @@ public class AssignmentSubmittedTab extends Fragment {
         lv = (ListView) parentholder.findViewById(R.id.ListViewSubmittedAssignment);
 
         rowItems = new ArrayList<RowItem>();
+        AssignmentTabList = new ArrayList<Integer>();
+        int i = 0;
         rowSubmittedItems = mList;
         for (Object obj : rowSubmittedItems) {
             AssignmentList assignments = (AssignmentList) obj;
             Assignment assignment = assignments.getAssignment();
             if(((AssignmentList) obj).getAssignment().getSubmitTime() != null) {
                 RowItem item = new RowItem(assignment.getTopic(),assignment.getSubmitTime(),assignment.getAnswer());
+                AssignmentTabList.add(i);
                 item.setType(assignment.getCategory());
                 rowItems.add(item);
             }
+            i++;
         }
         rowItems.sort(new Comparator<RowItem>(){
             @Override
@@ -138,7 +144,13 @@ public class AssignmentSubmittedTab extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position
                     , long l) {
-                Intent intent = new Intent(getActivity(), ViewBaiTap.class);
+                Log.v("listview","item clicked");
+                Intent intent = new Intent(getActivity(), ViewAssignmentSubmittedActivity.class);
+                String i = new String(String.valueOf(position));
+                String id = String.valueOf(AssignmentTabList.get(Integer.parseInt(i)));
+                intent.putExtra("assignment_pos", id);
+                Log.v("AssignmentTab click","mList id: "+AssignmentTabList.get(Integer.parseInt(i))+
+                        "\n Current pos: "+i);
                 startActivity(intent);
             }
         });

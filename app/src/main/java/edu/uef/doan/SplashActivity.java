@@ -64,7 +64,8 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 ////                Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                 boolean isUserLogged = getBooleanDefaults(getString(R.string.userlogged),SplashActivity.this);
-                if(!isUserLogged) {
+                Log.v("Login state", String.valueOf(isUserLogged));
+                if(isUserLogged) {
                     db = FirebaseFirestore.getInstance();
                     String id = getStringDefaults(getString(R.string.userid),SplashActivity.this);
                     Log.v(TAG,"ID"+ id);
