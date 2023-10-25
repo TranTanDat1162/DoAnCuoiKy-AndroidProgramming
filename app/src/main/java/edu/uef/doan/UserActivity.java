@@ -78,7 +78,7 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Update login state to false
-                setBooleanDefaults(getString(R.string.userlogged),true,UserActivity.this);
+                setBooleanDefaults(getString(R.string.userlogged),false,UserActivity.this);
                 Log.v("Login state","false");
                 // Wipe files of current user
                 try {
