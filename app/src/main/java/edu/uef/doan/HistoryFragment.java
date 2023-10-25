@@ -94,10 +94,10 @@ public class HistoryFragment extends Fragment {
                 AssignmentList assignments = (AssignmentList) obj;
                 Assignment assignment = assignments.getAssignment();
                 if(((AssignmentList) obj).getAssignment().getSubmitTime() != null) {
-                    RowItem item = new RowItem(assignment.getTopic(),1,assignment.getSubmitTime());
+                    RowItem item = new RowItem(assignment.getTitle(),1,assignment.getSubmitTime());
                     rowItems.add(item);
                 }
-                RowItem item = new RowItem(assignment.getTopic(),0,assignment.getCreateTime());
+                RowItem item = new RowItem(assignment.getTitle(),0,assignment.getCreateTime());
                 rowItems.add(item);
             }
             rowItems.sort(new Comparator<RowItem>(){
