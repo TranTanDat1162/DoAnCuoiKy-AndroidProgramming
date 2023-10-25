@@ -69,17 +69,6 @@
             android:layout_marginLeft="30dp"
             android:text="Remember me" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="110dp"
-            android:text="Forgot password"
-            android:textAlignment="center"
-            android:textColor="@color/forgotpassword"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
     </LinearLayout>
 
     <Button

@@ -19,6 +19,7 @@ import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -99,6 +100,9 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         ImageButton startDatePickerButton = findViewById(R.id.startDatePickerButton);
         ImageButton startTimePickerButton = findViewById(R.id.startTimePickerButton);
         ImageButton endDatePickerButton = findViewById(R.id.endDatePickerButton);
