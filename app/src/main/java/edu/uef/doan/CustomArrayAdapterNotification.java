@@ -58,14 +58,16 @@ public class CustomArrayAdapterNotification extends ArrayAdapter<RowItem>  {
             holder = (ViewHolder) convertView.getTag();
 
         holder.txtTitle.setText(rowItem.getTitle());
-        holder.txtDay.setText(rowItem.getDate());
+
 //        holder.txtTime.setText(rowItem.getTimeNotification().toString());
         switch(rowItem.getBgcolors()){
             case 0:
                 holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
+                holder.txtDay.setText("Created at: "+ rowItem.getDate());
                 break;
             case 1:
                 holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor1));
+                holder.txtDay.setText("Submitted at: "+ rowItem.getDate());
                 break;
             case 2:
                 holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor2));
