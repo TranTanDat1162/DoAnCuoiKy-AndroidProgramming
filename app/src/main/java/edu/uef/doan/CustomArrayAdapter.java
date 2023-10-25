@@ -63,16 +63,6 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
         holder.btnDelete.setOnClickListener(view -> {
 
         });
-        if(rowItem.getSubmitdate() == null) {
-            holder.txtDate.setText("Deadline: " + rowItem.getDate());
-            holder.txtDesc.setText("Task: "+rowItem.getDesc());
-        }else {
-            holder.txtDate.setText("Submitted at: " + rowItem.getSubmitdate());
-            holder.txtDesc.setText("Answer: "+rowItem.getDesc());
-            holder.btnDelete.setVisibility(View.VISIBLE);
-            holder.btnEdit.setVisibility(View.GONE);
-        }
-
         holder.txtTitle.setText(rowItem.getTitle());
         holder.txtType.setText(rowItem.getType());
         try {
@@ -97,9 +87,18 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
 //            default:
 //                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
             }
+            if(rowItem.getSubmitdate() == null) {
+                holder.txtDate.setText("Deadline: " + rowItem.getDate());
+                holder.txtDesc.setText("Task: "+rowItem.getDesc());
+            }else {
+                holder.txtDate.setText("Submitted at: " + rowItem.getSubmitdate());
+                holder.txtDesc.setText("Answer: "+rowItem.getDesc());
+                holder.btnDelete.setVisibility(View.GONE);
+                holder.btnEdit.setVisibility(View.GONE);
+            }
         }
         catch (Exception e){
-            Log.v("mAdapeter","No type");
+            Log.v("mAdapter","No type");
         }
         return convertView;
     }

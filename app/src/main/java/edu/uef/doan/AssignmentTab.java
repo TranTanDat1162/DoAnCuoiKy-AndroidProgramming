@@ -142,7 +142,8 @@ public class AssignmentTab extends Fragment {
                             deletebtn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    AssignmentList selected_item_id = (AssignmentList) mList.get(position);
+                                    int id = AssignmentTabList.get(position);
+                                    AssignmentList selected_item_id = (AssignmentList) mList.get(id);
                                     db.collection("users")
                                             .document(userDocument.getId())
                                             .collection("assignment").document(selected_item_id.getId()).delete()
@@ -169,7 +170,8 @@ public class AssignmentTab extends Fragment {
                                 public void onClick(View view) {
                                     Intent intent = new Intent(getActivity(), EditActivity.class);
                                     String i = new String(String.valueOf(position));
-                                    intent.putExtra("assignment_pos", i);
+                                    String id = String.valueOf(AssignmentTabList.get(Integer.parseInt(i)));
+                                    intent.putExtra("assignment_pos", id);
                                     startActivity(intent);
                                 }
                             });

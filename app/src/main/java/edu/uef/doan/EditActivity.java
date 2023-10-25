@@ -417,7 +417,6 @@ public class EditActivity extends AppCompatActivity {
         updatedData.setEndTime(endTime);
         updatedData.setCategory(category);
         updatedData.setCreateTime(assignment.getAssignment().getCreateTime());
-        updatedData.setSubmitTime(sdf3.format(timestamp));
 
         // Cập nhật dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
         db.collection("users").document(userId)
