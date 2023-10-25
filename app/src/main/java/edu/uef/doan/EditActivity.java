@@ -391,9 +391,6 @@ public class EditActivity extends AppCompatActivity {
         String userId = userDocument.getId();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        // Lấy assignmentId từ Intent
-        AssignmentList assignment = (AssignmentList) mList.get(Integer.parseInt(value));
-        String assignmentId = assignment.getId();
         // Tạo một Map chứa dữ liệu để cập nhật vào Firestore
 //        Map<String, Object> updatedData = new HashMap<>();
 //        updatedData.put("title", title);
@@ -403,6 +400,10 @@ public class EditActivity extends AppCompatActivity {
 //        updatedData.put("endDate", endDate);
 //        updatedData.put("endTime", endTime);
 //        updatedData.put("category", category);
+
+        // Lấy assignmentId từ Intent
+        AssignmentList assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+        String assignmentId = assignment.getId();
         Assignment updatedData = new Assignment();
         updatedData.setTitle(title);
         updatedData.setTopic(topic);

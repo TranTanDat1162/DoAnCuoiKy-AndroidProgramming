@@ -6,6 +6,16 @@ public class Assignment {
     private String StartDate;
     private String StartTime;
 
+    public String getAnswer() {
+        return Answer;
+    }
+
+    public void setAnswer(String answer) {
+        Answer = answer;
+    }
+
+    private String Answer;
+
     public void setEndDate(String endDate) {
         EndDate = endDate;
     }

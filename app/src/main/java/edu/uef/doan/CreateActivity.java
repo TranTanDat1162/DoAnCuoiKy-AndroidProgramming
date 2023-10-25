@@ -313,7 +313,6 @@ public class CreateActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
-
         attachmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -374,10 +373,12 @@ public class CreateActivity extends AppCompatActivity {
                     }
 
                     // Xử lý khi dữ liệu được lưu thành công
+                    PopulateList.UpdateL(db,CreateActivity.this);
                     Toast.makeText(CreateActivity.this, "Dữ liệu và tệp đính kèm đã được lưu thành công.", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý khi dữ liệu không thể được lưu vào Firestore
+                    PopulateList.UpdateL(db,CreateActivity.this);
                     Toast.makeText(CreateActivity.this, "Lỗi khi lưu dữ liệu vào Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }

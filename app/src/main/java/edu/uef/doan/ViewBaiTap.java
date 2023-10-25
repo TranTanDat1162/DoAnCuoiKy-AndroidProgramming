@@ -3,6 +3,7 @@ package edu.uef.doan;
 import static edu.uef.doan.LoginActivity.mList;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
+import static edu.uef.doan.SignupActivity.sdf3;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +32,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +50,7 @@ public class ViewBaiTap extends AppCompatActivity {
 
     private TextView category;
     private TextView task;
+    private EditText answerView;
 
     private List<Uri> selectedFiles = new ArrayList<>(); // Danh sách các tệp đã chọn
     private List<String> selectedFileNames = new ArrayList<>(); // Danh sách các tên tệp đã chọn
@@ -52,6 +58,7 @@ public class ViewBaiTap extends AppCompatActivity {
     private ImageButton returnButton, attachmentButton;
 
     private Button buttonDone;
+    FirebaseFirestore db;
 
     String value;
 
@@ -59,11 +66,13 @@ public class ViewBaiTap extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_bai_tap);
+        db = FirebaseFirestore.getInstance();
 
         returnButton = findViewById(R.id.returnButton);
         attachmentButton = findViewById(R.id.attachmentButton2);
         attachmentTextView = findViewById(R.id.attachmentTextView2);
         buttonDone = findViewById(R.id.btnDone);
+        answerView = findViewById(R.id.editTextAnswerField);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             value = extras.getString("assignment_pos");
@@ -102,10 +111,31 @@ public class ViewBaiTap extends AppCompatActivity {
     private void updateDataInFirestore(String textViewCategory, String textViewTask) {
         // Lấy ID của người dùng hiện tại từ Firebase Authentication
         String id = userDocument.getId();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         // Lấy assignmentId từ Intent
         AssignmentList assignment = (AssignmentList) mList.get(Integer.parseInt(value));
         String assignmentId = assignment.getId();
+
+        assignment.getAssignment().setAnswer(answerView.getText().toString());
+        assignment.getAssignment().setSubmitTime(sdf3.format(timestamp));
+        Log.v("Assignment data",assignment.getAssignment().toString());
+        // Cập nhật dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
+        db.collection("users").document(id)
+                .collection("assignment").document(assignmentId)
+                .set(assignment.getAssignment())
+                .addOnSuccessListener(aVoid -> {
+                    // Xử lý khi dữ liệu được cập nhật thành công
+                    Toast.makeText(ViewBaiTap.this, "Dữ liệu đã được cập nhật thành công.", Toast.LENGTH_SHORT).show();
+                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi cập nhật dữ liệu thành công
+                    Log.v("Asnwer","submitted");
+                    PopulateList.UpdateL(db, ViewBaiTap.this);
+                })
+                .addOnFailureListener(e -> {
+                    // Xử lý khi dữ liệu không thể được cập nhật vào Firestore
+                    Log.v("Asnwer","failed");
+                    Toast.makeText(ViewBaiTap.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void openFilePicker() {
