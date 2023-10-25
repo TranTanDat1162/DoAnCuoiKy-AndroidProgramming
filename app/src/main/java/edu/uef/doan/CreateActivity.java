@@ -175,7 +175,6 @@ public class CreateActivity extends AppCompatActivity {
                 selectionPrompt.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
             }
 
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Nothing to do here
@@ -364,11 +363,8 @@ public class CreateActivity extends AppCompatActivity {
                         // Upload tệp đính kèm lên Firebase Storage
                         storageRef.putFile(fileUri)
                                 .addOnSuccessListener(taskSnapshot -> {
-                                    // Lấy URL của tệp đính kèm đã được tải lên
-                                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                        // Lưu thông tin tên tệp và URL vào Firestore
-                                        saveAttachmentInfoToFirestore(assignmentId, fileName, uri.toString());
-                                    });
+                                    // Xử lý khi tệp đính kèm được tải lên thành công
+                                    Toast.makeText(CreateActivity.this, "Tệp đính kèm đã được tải lên thành công.", Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
                                     // Xử lý khi tệp đính kèm không thể được tải lên Firebase Storage

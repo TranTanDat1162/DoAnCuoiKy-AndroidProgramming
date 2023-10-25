@@ -175,8 +175,8 @@ public class SignupActivity extends AppCompatActivity {
 
         // Tạo một Object chứa dữ liệu để lưu vào Firestore
         Assignment assignmentData = new Assignment();
-        assignmentData.setTopic("Welcome to Homework manager");
-        assignmentData.setCreateTime(String.valueOf(timestamp.toString()));
+        assignmentData.setTitle("Welcome to Homework manager");
+        assignmentData.setCreateTime(sdf3.format(timestamp));
 
         // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
         db.collection("users").document(id).collection("assignment")
