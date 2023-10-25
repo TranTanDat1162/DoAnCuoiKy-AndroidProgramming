@@ -65,13 +65,14 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
         });
         if(rowItem.getSubmitdate() == null) {
             holder.txtDate.setText("Deadline: " + rowItem.getDate());
+            holder.txtDesc.setText("Task: "+rowItem.getDesc());
         }else {
             holder.txtDate.setText("Submitted at: " + rowItem.getSubmitdate());
+            holder.txtDesc.setText("Answer: "+rowItem.getDesc());
             holder.btnDelete.setVisibility(View.VISIBLE);
             holder.btnEdit.setVisibility(View.GONE);
         }
 
-        holder.txtDesc.setText("Task: "+rowItem.getDesc());
         holder.txtTitle.setText(rowItem.getTitle());
         holder.txtType.setText(rowItem.getType());
         try {

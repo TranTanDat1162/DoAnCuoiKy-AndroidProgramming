@@ -8,6 +8,16 @@ public class RowItem {
     private String title;
     private String desc;
     private int bgcolors;
+
+    public int getListid() {
+        return mListid;
+    }
+
+    public void setListid(int listid) {
+        mListid = listid;
+    }
+
+    private int mListid;
     private String date;
     private String submitdate;
     private String type;

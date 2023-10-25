@@ -101,7 +101,7 @@ public class AssignmentSubmittedTab extends Fragment {
         }
         rowItems.sort(new Comparator<RowItem>(){
             @Override
-            public int compare(RowItem t1, RowItem t0) {
+            public int compare(RowItem t0, RowItem t1) {
                 DateTimeComparator dateTimeComparator = DateTimeComparator.getInstance();
                 Date date1 = null;
                 Date date0 = null;
