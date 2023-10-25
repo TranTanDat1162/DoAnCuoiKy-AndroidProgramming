@@ -85,6 +85,7 @@ public class SplashActivity extends AppCompatActivity {
                                 }
                                 Intent i = new Intent(SplashActivity.this, HomeActivity.class);
                                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(i);
                                 Log.v(TAG,"Task completed");
                             } else {

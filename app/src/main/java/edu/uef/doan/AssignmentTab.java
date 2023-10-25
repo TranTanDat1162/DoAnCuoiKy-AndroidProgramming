@@ -171,6 +171,7 @@ public class AssignmentTab extends Fragment {
                                     Intent intent = new Intent(getActivity(), EditActivity.class);
                                     String i = new String(String.valueOf(position));
                                     String id = String.valueOf(AssignmentTabList.get(Integer.parseInt(i)));
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                     intent.putExtra("assignment_pos", id);
                                     startActivity(intent);
                                 }

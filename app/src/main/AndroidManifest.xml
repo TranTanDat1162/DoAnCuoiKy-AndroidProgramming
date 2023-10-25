@@ -27,9 +27,9 @@
         <activity
             android:name=".EditActivity"
             android:exported="false" />
-        <activity
-            android:name=".DemoActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".DemoActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".ViewBaiTap"
             android:exported="false" /> <!-- <activity -->
@@ -50,9 +50,9 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".SplashActivity"
             android:exported="true">

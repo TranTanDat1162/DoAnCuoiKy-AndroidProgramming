@@ -1,6 +1,8 @@
 package edu.uef.doan;
 
+import static android.content.ContentValues.TAG;
 import static edu.uef.doan.LoginActivity.mList;
+import static edu.uef.doan.LoginActivity.storage;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
 import static edu.uef.doan.SignupActivity.sdf3;
@@ -15,7 +17,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +40,24 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,6 +67,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Objects;
+
+import firebase.com.protolitewrapper.BuildConfig;
 
 
 public class EditActivity extends AppCompatActivity {
@@ -81,7 +99,9 @@ public class EditActivity extends AppCompatActivity {
     private TextView attachmentTextView;
     // Khai báo biến cho Firestore
     private FirebaseFirestore db;
+    StorageReference storageRef = storage.getReference();
     String value;
+    AssignmentList selected_assignment;
 
     private String getMimeType(String filePath) {
         String type = null;
@@ -100,6 +120,8 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -122,7 +144,8 @@ public class EditActivity extends AppCompatActivity {
         if (extras != null) {
             value = extras.getString("assignment_pos");
         }
-        AssignmentList selected_assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+        selected_assignment = (AssignmentList) mList.get(Integer.parseInt(value));
+
         title = (EditText) findViewById(R.id.editText1);
         title.setText(selected_assignment.getAssignment().getTitle());
         topic = (EditText) findViewById(R.id.editText2);
@@ -158,6 +181,11 @@ public class EditActivity extends AppCompatActivity {
         attachmentButton.setOnClickListener(v -> openFilePicker());
         // Khởi tạo Firestore
         db = FirebaseFirestore.getInstance();
+        try {
+            Fetch(db,EditActivity.this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -235,6 +263,12 @@ public class EditActivity extends AppCompatActivity {
                 }
             }
         });
+        attachmentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSelectedFileList();
+            }
+        });
 
 
 //        btn1.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +310,6 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-
 // Thời gian bắt đầu
         startTimePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,7 +334,6 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-
 // Ngày kết thúc
         endDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +357,6 @@ public class EditActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-
 
 // Thời gian kết thúc
         endTimePickerButton.setOnClickListener(new View.OnClickListener() {
@@ -388,7 +419,6 @@ public class EditActivity extends AppCompatActivity {
 //                    Toast.makeText(EditActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 //                });
 //    }
-
     // Phương thức cập nhật dữ liệu vào Firestore
     private void updateDataInFirestore(String title, String topic, String startDate, String startTime, String enddate, String endTime, String category) {
         // Lấy ID của người dùng hiện tại từ Firebase Authentication
@@ -416,31 +446,93 @@ public class EditActivity extends AppCompatActivity {
         updatedData.setEndDate(enddate);
         updatedData.setEndTime(endTime);
         updatedData.setCategory(category);
+        updatedData.setNumAttachments(selectedFiles.size());
         updatedData.setCreateTime(assignment.getAssignment().getCreateTime());
 
         // Cập nhật dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
+//        db.collection("users").document(userId)
+//                .collection("assignment").document(assignmentId)
+//                .set(updatedData)
+//                .addOnSuccessListener(aVoid -> {
+//                    // Xử lý khi dữ liệu được cập nhật thành công
+//                    Toast.makeText(EditActivity.this, "Dữ liệu đã được cập nhật thành công.", Toast.LENGTH_SHORT).show();
+//                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi cập nhật dữ liệu thành công
+//                    PopulateList.UpdateL(db, EditActivity.this);
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Xử lý khi dữ liệu không thể được cập nhật vào Firestore
+//                    Toast.makeText(EditActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                });
         db.collection("users").document(userId)
                 .collection("assignment").document(assignmentId)
                 .set(updatedData)
-                .addOnSuccessListener(aVoid -> {
-                    // Xử lý khi dữ liệu được cập nhật thành công
-                    Toast.makeText(EditActivity.this, "Dữ liệu đã được cập nhật thành công.", Toast.LENGTH_SHORT).show();
-                    // Điều hướng hoặc thực hiện các hành động cần thiết sau khi cập nhật dữ liệu thành công
-                    PopulateList.UpdateL(db, EditActivity.this);
+                .addOnSuccessListener(documentReference -> {
+                    // Lưu trữ tệp đính kèm vào Firebase Storage
+                    for (int i = 0; i < selectedFiles.size(); i++) {
+                        Uri fileUri = selectedFiles.get(i);
+                        String fileName = getFileName(fileUri);
+
+                        // Tạo đường dẫn đến thư mục lưu trữ tệp đính kèm
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                                .child(userId)
+                                .child("attachments")
+                                .child(assignmentId)
+                                .child(fileName);
+
+                        // Upload tệp đính kèm lên Firebase Storage
+                        storageRef.putFile(fileUri)
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    // Lấy URL của tệp đính kèm đã được tải lên
+                                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                        // Lưu thông tin tên tệp và URL vào Firestore
+//                                        saveAttachmentInfoToFirestore(assignmentId, fileName, uri.toString());
+                                        Log.v("Update new attachments","Successful");
+                                    });
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Xử lý khi tệp đính kèm không thể được tải lên Firebase Storage
+                                    Toast.makeText(EditActivity.this, "Lỗi khi tải tệp lên Firebase Storage: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+
+                    // Xử lý khi dữ liệu được lưu thành công
+                    PopulateList.UpdateL(db,EditActivity.this);
+                    Toast.makeText(EditActivity.this, "Dữ liệu và tệp đính kèm đã được lưu thành công.", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    // Xử lý khi dữ liệu không thể được cập nhật vào Firestore
-                    Toast.makeText(EditActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Xử lý khi dữ liệu không thể được lưu vào Firestore
+                    PopulateList.UpdateL(db,EditActivity.this);
+                    Toast.makeText(EditActivity.this, "Lỗi khi lưu dữ liệu vào Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+//    private void saveAttachmentInfoToFirestore(String name, String fileName, String fileUrl) {
+//        String id = userDocument.getId();
+//        db.collection("users").document(id).set(user);
+//        // Tạo một Map chứa thông tin về tệp đính kèm
+//        Map<String, Object> attachmentInfo = new HashMap<>();
+//        attachmentInfo.put("fileName", fileName);
+//        attachmentInfo.put("fileUrl", fileUrl);
+//
+//        // Lưu thông tin tệp đính kèm vào Firestore trong bảng "attachments"
+//        db.collection("users").document(id).collection("assignment")
+//                .add(attachmentInfo)
+//                .addOnSuccessListener(documentReference -> {
+//                    // Xử lý khi thông tin tệp đính kèm được lưu thành công
+//                    Log.d(TAG, "Tệp đính kèm được lưu thành công: " + documentReference.getId());
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Xử lý khi thông tin tệp đính kèm không thể được lưu vào Firestore
+//                    Log.w(TAG, "Lỗi khi lưu thông tin tệp đính kèm vào Firestore", e);
+//                });
+//    }
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều tệp
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, PICK_FILES_REQUEST_CODE);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -468,15 +560,7 @@ public class EditActivity extends AppCompatActivity {
 
         // Xử lý khi người dùng nhấp vào TextView để kiểm tra danh sách các tệp đã chọn
 
-
-        attachmentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSelectedFileList();
-            }
-        });
     }
-
 
     private void showSelectedFileList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -493,6 +577,7 @@ public class EditActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Xử lý khi người dùng nhấp vào một tệp
                 openSelectedFile(selectedFiles.get(position));
+                Log.v("EditActivity", position + selectedFiles.toString());
             }
         });
 
@@ -508,11 +593,11 @@ public class EditActivity extends AppCompatActivity {
         builder.show();
     }
 
-
     private void openSelectedFile(Uri fileUri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(fileUri);
+        String mime = getContentResolver().getType(fileUri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setDataAndType(fileUri,mime);
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -530,8 +615,6 @@ public class EditActivity extends AppCompatActivity {
             attachmentTextView.setText("Đã chọn " + selectedFileNames.size() + " tệp");
         }
     }
-
-
 
     // Phương thức để lấy tên tệp từ Uri
     private String getFileName(Uri uri) {
@@ -556,7 +639,6 @@ public class EditActivity extends AppCompatActivity {
         }
         return result;
     }
-
 
     public class SelectedFilesAdapter extends BaseAdapter {
         private List<String> fileNames;
@@ -637,6 +719,60 @@ public class EditActivity extends AppCompatActivity {
 
             return convertView;
         }
+    }
+    public void Fetch(FirebaseFirestore db, Context cxt) throws IOException {
+        StorageReference attachmentRef = storageRef.child(userDocument.getId()+"/attachments/"+selected_assignment.getId());
+        Files.createDirectories(Paths.get(getFilesDir() + "/user/assignments/"+selected_assignment.getId()));
+        File localFile = new File(getFilesDir() + "/user/assignments/"+selected_assignment.getId()+"/");
+        attachmentRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference prefix : listResult.getPrefixes()) {
+                            // All the prefixes under listRef.
+                            // You may call listAll() recursively on them.
+                        }
+
+                        for (StorageReference item : listResult.getItems()) {
+                            // All the items under listRef.
+//                            Log.v("DebugDownloadAttachment",item.getName()+" downloaded at"
+//                                            + localFile.getPath()+"/"+ item.getName());
+                            File generated = new File(localFile.getPath()+"/"+ item.getName());
+
+                            item.getFile(generated)
+                                .addOnSuccessListener(taskSnapshot ->{
+                                    Log.v("DownloadAttachment",item.getName()+" downloaded at"
+                                    + localFile.getPath()+"/"+ item.getName());
+                                    Uri uri = FileProvider.getUriForFile(EditActivity.this, getApplication().getPackageName()+ ".fileprovider", generated);
+                                    selectedFiles.add(uri);
+                                    selectedFileNames.add(generated.getName());
+
+                                    updateAttachmentTextView();
+                                })
+                                .addOnFailureListener(exception ->{
+                                Log.v("DownloadAttachment",item.getName() +"failed");
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred!
+                        Log.e("ErrorDownloadAttachment",e.getMessage());
+                    }
+                }).addOnCompleteListener(runnable -> {
+                    Log.v("DownloadAttachment",runnable.getResult().toString());
+                });
+//        attachmentRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+//            // Local temp file has been created
+//            PopulateList.UpdateL(db,EditActivity.this);
+//            Log.v("DownloadPfp","pfp downloaded");
+//        }).addOnFailureListener(exception -> {
+//            // Handle any errors
+//            PopulateList.UpdateL(db,EditActivity.this);
+//            Log.v("DownloadPfp","failed");
+//        });
     }
 
 }

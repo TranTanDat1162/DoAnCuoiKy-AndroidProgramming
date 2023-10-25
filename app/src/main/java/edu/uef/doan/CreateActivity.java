@@ -360,14 +360,14 @@ public class CreateActivity extends AppCompatActivity {
                                 .child("attachments")
                                 .child(assignmentId)
                                 .child(fileName);
-
                         // Upload tệp đính kèm lên Firebase Storage
                         storageRef.putFile(fileUri)
                                 .addOnSuccessListener(taskSnapshot -> {
                                     // Lấy URL của tệp đính kèm đã được tải lên
                                     storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                                         // Lưu thông tin tên tệp và URL vào Firestore
-                                        saveAttachmentInfoToFirestore(assignmentId, fileName, uri.toString());
+//                                        saveAttachmentInfoToFirestore(assignmentId, fileName, uri.toString());
+                                        Log.v("Upload new attachments","Successful");
                                     });
                                 })
                                 .addOnFailureListener(e -> {
@@ -386,26 +386,26 @@ public class CreateActivity extends AppCompatActivity {
                     Toast.makeText(CreateActivity.this, "Lỗi khi lưu dữ liệu vào Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-    private void saveAttachmentInfoToFirestore(String name, String fileName, String fileUrl) {
-        String id = userDocument.getId();
-        db.collection("users").document(id).set(user);
-        // Tạo một Map chứa thông tin về tệp đính kèm
-        Map<String, Object> attachmentInfo = new HashMap<>();
-        attachmentInfo.put("fileName", fileName);
-        attachmentInfo.put("fileUrl", fileUrl);
-
-        // Lưu thông tin tệp đính kèm vào Firestore trong bảng "attachments"
-        db.collection("users").document(id).collection("assignment")
-                .add(attachmentInfo)
-                .addOnSuccessListener(documentReference -> {
-                    // Xử lý khi thông tin tệp đính kèm được lưu thành công
-                    Log.d(TAG, "Tệp đính kèm được lưu thành công: " + documentReference.getId());
-                })
-                .addOnFailureListener(e -> {
-                    // Xử lý khi thông tin tệp đính kèm không thể được lưu vào Firestore
-                    Log.w(TAG, "Lỗi khi lưu thông tin tệp đính kèm vào Firestore", e);
-                });
-    }
+//    private void saveAttachmentInfoToFirestore(String name, String fileName, String fileUrl) {
+//        String id = userDocument.getId();
+//        db.collection("users").document(id).set(user);
+//        // Tạo một Map chứa thông tin về tệp đính kèm
+//        Map<String, Object> attachmentInfo = new HashMap<>();
+//        attachmentInfo.put("fileName", fileName);
+//        attachmentInfo.put("fileUrl", fileUrl);
+//
+//        // Lưu thông tin tệp đính kèm vào Firestore trong bảng "attachments"
+//        db.collection("users").document(id).collection("assignment")
+//                .add(attachmentInfo)
+//                .addOnSuccessListener(documentReference -> {
+//                    // Xử lý khi thông tin tệp đính kèm được lưu thành công
+//                    Log.d(TAG, "Tệp đính kèm được lưu thành công: " + documentReference.getId());
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Xử lý khi thông tin tệp đính kèm không thể được lưu vào Firestore
+//                    Log.w(TAG, "Lỗi khi lưu thông tin tệp đính kèm vào Firestore", e);
+//                });
+//    }
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
