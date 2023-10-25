@@ -9,6 +9,7 @@ public class RowItem {
     private String desc;
     private int bgcolors;
     private String date;
+    private String submitdate;
     private String type;
     public RowItem(){
 
@@ -32,6 +33,11 @@ public class RowItem {
         this.title = topic;
         this.bgcolors = i;
         this.date = startTime;
+    }
+    public RowItem(String topic, String submitdate,String answer) {
+        this.title = topic;
+        this.submitdate = submitdate;
+        this.desc = answer;
     }
 
 
@@ -69,4 +75,7 @@ public class RowItem {
     public void setDate(String date) { this.date = date;}
     public String getType() {return type;}
     public void setType(String type) {this.type = type;}
+    public String getSubmitdate() { return submitdate; }
+
+    public void setSubmitdate(String submitdate) { this.submitdate = submitdate; }
 }

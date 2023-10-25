@@ -88,56 +88,7 @@ public class HistoryFragment extends Fragment {
 
         lv = (ListView) parentholder.findViewById(R.id.ListViewHistory);
         rowItems = new ArrayList<RowItem>();
-//        for (int i = 0; i < descriptions.length; i++) {
-//            RowItem item = new RowItem(descriptions[i], bgColor[i],dates[i]);
-//            rowItems.add(item);
-//        }
         try {
-//            rowAssignedItems = new ArrayList<RowItem>();
-//            rowItems = new ArrayList<RowItem>();
-//            rowAssignedItems.subList(0,rowAssignedItems.size()-1).sort(new Comparator<AssignmentList>(){
-//                @Override
-//                public int compare(AssignmentList t0, AssignmentList t1) {
-//                    DateTimeComparator dateTimeComparator = DateTimeComparator.getInstance();
-//                    Date date1 = null;
-//                    Date date0 = null;
-//                    try {
-//                        date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(t0.getAssignment().getCreateTime() +" "+ t0.getAssignment().getCreateTime());
-//                        date0 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(t1.getAssignment().getCreateTime() +" "+ t1.getAssignment().getCreateTime());
-//                    } catch (ParseException e) {
-//                        Log.e("Sort history ","Something went wrong with sorting." +
-//                                "\nt0:"+t0.getAssignment().getCreateTime()+
-//                                "\nt1:"+t1.getAssignment().getCreateTime());
-//                        return 0;
-//                    }
-//                    int retVal = dateTimeComparator.compare(date1, date0);
-////                            Log.v("retVal",String.valueOf(retVal));
-//                    if(retVal == 0)
-//                        //both dates are equal
-//                        return 0;
-//                    else if(retVal < 0)
-//                        //myDateOne is before myDateTwo
-//                        return 1;
-//                    else if(retVal > 0)
-//                        //myDateOne is after myDateTwo
-//                        return -1;
-//                    return 0;
-//                }
-//            });
-//            for (Object obj : rowAssignedItems) {
-////                RowItem item = new RowItem(assignment.getTopic(),0,assignment.getCreateTime());
-////                if(assignment.getSubmitTime() != null){
-////                    rowSubmitItems.add(item);
-////                }
-////                rowAssignedItems.add(item);
-//                AssignmentList assignments = (AssignmentList) obj;
-//                Assignment assignment = assignments.getAssignment();
-//                if(((AssignmentList) obj).getAssignment().getSubmitTime() != null) {
-//                    rowSubmitItems.add(assignments);
-//                }
-//                rowSubmitItems.add(assignments);
-//
-//            }
             rowAssignedItems = mList;
             for (Object obj : rowAssignedItems) {
                 AssignmentList assignments = (AssignmentList) obj;

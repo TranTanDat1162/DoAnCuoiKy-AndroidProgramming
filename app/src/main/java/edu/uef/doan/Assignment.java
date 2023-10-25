@@ -6,6 +6,16 @@ public class Assignment {
     private String StartDate;
     private String StartTime;
 
+    public int getNumAttachments() {
+        return NumAttachments;
+    }
+
+    public void setNumAttachments(int numAttachments) {
+        NumAttachments = numAttachments;
+    }
+
+    private int NumAttachments;
+
     public String getAnswer() {
         return Answer;
     }

@@ -83,7 +83,6 @@ public class AssignmentTab extends Fragment {
         }
 
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,11 +94,13 @@ public class AssignmentTab extends Fragment {
                 RowItem item = new RowItem();
                 AssignmentList assignments = (AssignmentList) obj;
                 Assignment assignment = assignments.getAssignment();
-                item.setTitle(assignment.getTitle());
-                item.setDesc(assignment.getTopic());
-                item.setDate(assignment.getEndDate() + " - " + assignment.getEndTime());
-                item.setType(assignment.getCategory());
-                rowItems.add(item);
+                if(assignment.getSubmitTime() == null) {
+                    item.setTitle(assignment.getTitle());
+                    item.setDesc(assignment.getTopic());
+                    item.setDate(assignment.getEndDate() + " - " + assignment.getEndTime());
+                    item.setType(assignment.getCategory());
+                    rowItems.add(item);
+                }
             }
         }
         catch (Exception e){

@@ -61,12 +61,18 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
         } else
             holder = (ViewHolder) convertView.getTag();
         holder.btnDelete.setOnClickListener(view -> {
-            
+
         });
+        if(rowItem.getSubmitdate() == null) {
+            holder.txtDate.setText("Deadline: " + rowItem.getDate());
+        }else {
+            holder.txtDate.setText("Submitted at: " + rowItem.getSubmitdate());
+            holder.btnDelete.setVisibility(View.VISIBLE);
+            holder.btnEdit.setVisibility(View.GONE);
+        }
 
         holder.txtDesc.setText("Task: "+rowItem.getDesc());
         holder.txtTitle.setText(rowItem.getTitle());
-        holder.txtDate.setText("Deadline: "+ rowItem.getDate());
         holder.txtType.setText(rowItem.getType());
         try {
             switch (rowItem.getType()) {
@@ -89,7 +95,6 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem>  {
                     break;
 //            default:
 //                holder.bgColor.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.assignmentblockbgcolor));
-
             }
         }
         catch (Exception e){
