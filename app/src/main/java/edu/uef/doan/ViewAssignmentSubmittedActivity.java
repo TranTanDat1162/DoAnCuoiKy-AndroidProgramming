@@ -249,7 +249,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
                 selectedFileNames2.add(fileName);
                 attachmentTextView2.setText(fileName);
                 attachmentTextView2.setVisibility(View.VISIBLE);
-                if(selectedFiles2.size() > 0){
+                if(selectedFiles2.size() > 1){
                     attachmentTextView2.setText("Đã chọn " + selectedFiles2.size() + " tệp");
                     attachmentTextView2.setVisibility(View.VISIBLE);
                 }

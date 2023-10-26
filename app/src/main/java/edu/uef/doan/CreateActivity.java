@@ -341,7 +341,6 @@ public class CreateActivity extends AppCompatActivity {
         assignmentData.put("createTime",sdf3.format(timestamp));
         assignmentData.put("numAttachments", selectedFiles.size());
 
-
         // Lưu dữ liệu vào Firestore trong bảng "assignments" của người dùng hiện tại
         db.collection("users").document(id).collection("assignment")
                 .add(assignmentData)
@@ -413,7 +412,6 @@ public class CreateActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_FILES_REQUEST_CODE);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -435,6 +433,10 @@ public class CreateActivity extends AppCompatActivity {
                 selectedFileNames.add(fileName);
                 attachmentTextView.setText(fileName);
                 attachmentTextView.setVisibility(View.VISIBLE);
+                if(selectedFiles.size() > 1){
+                    attachmentTextView.setText("Đã chọn " + selectedFiles.size() + " tệp");
+                    attachmentTextView.setVisibility(View.VISIBLE);
+                }
             }
         }
 
