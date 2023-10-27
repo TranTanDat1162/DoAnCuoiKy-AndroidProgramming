@@ -238,7 +238,7 @@ public class ViewBaiTap extends AppCompatActivity {
                     selectedFiles2.add(fileUri); // Lưu trữ Uri của tệp đã chọn
                     selectedFileNames2.add(getFileName(fileUri));
                 }
-                attachmentTextView2.setText("Đã chọn " + selectedFiles2.size() + " tệp");
+                attachmentTextView2.setText("Selected " + selectedFiles2.size() + " files");
                 attachmentTextView2.setVisibility(View.VISIBLE);
             } else if (data.getData() != null) {
                 Uri fileUri = data.getData();
@@ -248,7 +248,7 @@ public class ViewBaiTap extends AppCompatActivity {
                 attachmentTextView2.setText(fileName);
                 attachmentTextView2.setVisibility(View.VISIBLE);
                 if(selectedFiles2.size() > 1){
-                    attachmentTextView2.setText("Đã chọn " + selectedFiles2.size() + " tệp");
+                    attachmentTextView2.setText("Selected " + selectedFiles2.size() + " files");
                     attachmentTextView2.setVisibility(View.VISIBLE);
                 }
             }
@@ -266,7 +266,7 @@ public class ViewBaiTap extends AppCompatActivity {
 
     private void showSelectedFileList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Danh sách các tệp đã chọn");
+        builder.setTitle("List of files selected");
 
         View selectedFilesView = getLayoutInflater().inflate(R.layout.selected_files_list, null);
         ListView selectedFilesListView = selectedFilesView.findViewById(R.id.selectedFilesListView);
@@ -295,7 +295,7 @@ public class ViewBaiTap extends AppCompatActivity {
     }
     private void showSelectedFileList2() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Danh sách các tệp đã chọn");
+        builder.setTitle("List of file selected");
 
         View selectedFilesView = getLayoutInflater().inflate(R.layout.selected_files_list, null);
         ListView selectedFilesListView = selectedFilesView.findViewById(R.id.selectedFilesListView);
@@ -331,7 +331,7 @@ public class ViewBaiTap extends AppCompatActivity {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(ViewBaiTap.this, "Không có ứng dụng nào có thể mở file này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ViewBaiTap.this, "Not any application to open this file", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -445,7 +445,7 @@ public class ViewBaiTap extends AppCompatActivity {
             attachmentTextView2.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
             attachmentTextView2.setVisibility(View.INVISIBLE);
         } else {
-            attachmentTextView2.setText("Đã chọn " + selectedFileNames2.size() + " tệp");
+            attachmentTextView2.setText("Selected " + selectedFileNames2.size() + " files");
         }
     }
     private void updateAttachmentTextView() {
@@ -453,7 +453,7 @@ public class ViewBaiTap extends AppCompatActivity {
             attachmentTextView.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
             attachmentTextView.setVisibility(View.INVISIBLE);
         } else {
-            attachmentTextView.setText("Đã chọn " + selectedFileNames.size() + " tệp");
+            attachmentTextView.setText("Selected " + selectedFileNames.size() + " files");
         }
     }
 

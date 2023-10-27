@@ -268,7 +268,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
 
     private void showSelectedFileList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Danh sách các tệp đã chọn");
+        builder.setTitle("List of files selected");
 
         View selectedFilesView = getLayoutInflater().inflate(R.layout.selected_files_list, null);
         ListView selectedFilesListView = selectedFilesView.findViewById(R.id.selectedFilesListView);
@@ -297,7 +297,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
     }
     private void showSelectedFileList2() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Danh sách các tệp đã chọn");
+        builder.setTitle("List of files selected");
 
         View selectedFilesView = getLayoutInflater().inflate(R.layout.selected_files_list, null);
         ListView selectedFilesListView = selectedFilesView.findViewById(R.id.selectedFilesListView);
@@ -314,7 +314,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
         });
 
         builder.setView(selectedFilesView);
-        builder.setPositiveButton("Xong", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Xử lý khi người dùng ấn nút "Xử lý"
@@ -333,7 +333,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(ViewAssignmentSubmittedActivity.this, "Không có ứng dụng nào có thể mở file này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ViewAssignmentSubmittedActivity.this, "Not any application to open this file", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -447,7 +447,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
             attachmentTextView2.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
             attachmentTextView2.setVisibility(View.INVISIBLE);
         } else {
-            attachmentTextView2.setText("Đã chọn " + selectedFileNames2.size() + " tệp");
+            attachmentTextView2.setText("Selected " + selectedFileNames2.size() + " files");
         }
     }
     private void updateAttachmentTextView() {
@@ -455,7 +455,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
             attachmentTextView.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
             attachmentTextView.setVisibility(View.INVISIBLE);
         } else {
-            attachmentTextView.setText("Đã chọn " + selectedFileNames.size() + " tệp");
+            attachmentTextView.setText("Selected " + selectedFileNames.size() + " files");
         }
     }
 

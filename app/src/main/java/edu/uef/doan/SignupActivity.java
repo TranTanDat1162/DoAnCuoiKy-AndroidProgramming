@@ -120,7 +120,6 @@ public class SignupActivity extends AppCompatActivity {
                                                                 AnimationForSignUpSuccess();
                                                                 docRef = documentReference;
                                                                 firstMsg();
-                                                                Toast.makeText(SignupActivity.this, "User added successfully", Toast.LENGTH_SHORT).show();
 
                                                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                                                 startActivity(intent);
@@ -183,12 +182,12 @@ public class SignupActivity extends AppCompatActivity {
                 .add(assignmentData)
                 .addOnSuccessListener(documentReference -> {
                     // Xử lý khi dữ liệu được lưu thành công
-                    Toast.makeText(SignupActivity.this, "Dữ liệu đã được lưu thành công vào Firestore.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "User added successfully", Toast.LENGTH_SHORT).show();
                     // Điều hướng hoặc thực hiện các hành động cần thiết sau khi lưu dữ liệu thành công
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý khi dữ liệu không thể được lưu vào Firestore
-                    Toast.makeText(SignupActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }

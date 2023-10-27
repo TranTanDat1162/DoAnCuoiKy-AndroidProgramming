@@ -244,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:hint="Nhập tag tùy chỉnh" />
+                    android:hint="Input your tag" />
 
                 <Button
                     android:id="@+id/okButton"
@@ -261,5 +261,5 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginTop="10dp"
-        android:text="Done" />
+        android:text="Create" />
 </LinearLayout>
