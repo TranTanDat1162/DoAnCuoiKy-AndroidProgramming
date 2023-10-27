@@ -10,12 +10,4 @@
 
     <style name="Theme.DoAn" parent="Base.Theme.DoAn" />
 
-    <style name="Theme.DoAn.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.DoAn.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.DoAn.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

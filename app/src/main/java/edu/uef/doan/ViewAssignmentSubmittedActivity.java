@@ -443,7 +443,7 @@ public class ViewAssignmentSubmittedActivity extends AppCompatActivity {
     }
 
     private void updateAttachmentTextView2() {
-        if (selectedFileNames.isEmpty()) {
+        if (selectedFileNames2.isEmpty()) {
             attachmentTextView2.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
             attachmentTextView2.setVisibility(View.INVISIBLE);
         } else {
