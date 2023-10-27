@@ -441,8 +441,6 @@ public class CreateActivity extends AppCompatActivity {
         }
 
         // Xử lý khi người dùng nhấp vào TextView để kiểm tra danh sách các tệp đã chọn
-
-
         attachmentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

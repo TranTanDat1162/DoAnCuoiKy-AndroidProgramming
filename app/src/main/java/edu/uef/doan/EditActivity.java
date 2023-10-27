@@ -175,6 +175,8 @@ public class EditActivity extends AppCompatActivity {
         tagAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tags);
         tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tagSpinner.setAdapter(tagAdapter);
+//        tagSpinner.setSelection(2);
+//        Log.v("TagSpinner","Position 1");
 
         attachmentButton = findViewById(R.id.attachmentButton);
         attachmentTextView = findViewById(R.id.attachmentTextView);
@@ -219,6 +221,18 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedTag = tags.get(position);
+                String tag = selected_assignment.getAssignment().getCategory();
+                if(tag.equals("None"))
+                    tagSpinner.setSelection(0);
+                else if (tag.equals("Essay"))
+                    tagSpinner.setSelection(1);
+                else if (tag.equals("Homework"))
+                    tagSpinner.setSelection(2);
+                else
+                    tagSpinner.setSelection(3);
+//                tagSpinner.setSelection(2);
+//                Log.v("TagSpinner","Position 1");
+
                 // Nếu chọn "Other", hiển thị EditText và nút OK
                 if (selectedTag.equals("Other")) {
                     customTagLayout.setVisibility(View.VISIBLE);
