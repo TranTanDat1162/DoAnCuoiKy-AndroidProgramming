@@ -84,8 +84,8 @@ public class CreateActivity extends AppCompatActivity {
         return type;
     }
 
-    private List<Uri> selectedFiles = new ArrayList<>(); // Danh sách các tệp đã chọn
-    private List<String> selectedFileNames = new ArrayList<>(); // Danh sách các tên tệp đã chọn
+    private List<Uri> selectedFiles = new ArrayList<>(); // Danh sách các files đã chọn
+    private List<String> selectedFileNames = new ArrayList<>(); // Danh sách các tên files đã chọn
 
 
     @Override
@@ -331,29 +331,29 @@ public class CreateActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     String assignmentId = documentReference.getId();
     
-                    // Lưu trữ tệp đính kèm vào Firebase Storage
+                    // Lưu trữ files đính kèm vào Firebase Storage
                     for (int i = 0; i < selectedFiles.size(); i++) {
                         Uri fileUri = selectedFiles.get(i);
                         String fileName = getFileName(fileUri);
 
-                        // Tạo đường dẫn đến thư mục lưu trữ tệp đính kèm
+                        // Tạo đường dẫn đến thư mục lưu trữ files đính kèm
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                                 .child(id)
                                 .child("attachments")
                                 .child(assignmentId)
                                 .child(fileName);
-                        // Upload tệp đính kèm lên Firebase Storage
+                        // Upload files đính kèm lên Firebase Storage
                         storageRef.putFile(fileUri)
                                 .addOnSuccessListener(taskSnapshot -> {
-                                    // Lấy URL của tệp đính kèm đã được tải lên
+                                    // Lấy URL của files đính kèm đã được tải lên
                                     storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                        // Lưu thông tin tên tệp và URL vào Firestore
+                                        // Lưu thông tin tên files và URL vào Firestore
 //                                        saveAttachmentInfoToFirestore(assignmentId, fileName, uri.toString());
                                         Log.v("Upload new attachments","Successful");
                                     });
                                 })
                                 .addOnFailureListener(e -> {
-                                    // Xử lý khi tệp đính kèm không thể được tải lên Firebase Storage
+                                    // Xử lý khi files đính kèm không thể được tải lên Firebase Storage
                                     Toast.makeText(CreateActivity.this, "Fail to update files to Firebase Storage: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     }
@@ -372,7 +372,7 @@ public class CreateActivity extends AppCompatActivity {
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều tệp
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều files
         startActivityForResult(intent, PICK_FILES_REQUEST_CODE);
     }
 
@@ -385,26 +385,26 @@ public class CreateActivity extends AppCompatActivity {
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri fileUri = clipData.getItemAt(i).getUri();
-                    selectedFiles.add(fileUri); // Lưu trữ Uri của tệp đã chọn
+                    selectedFiles.add(fileUri); // Lưu trữ Uri của files đã chọn
                     selectedFileNames.add(getFileName(fileUri));
                 }
-                attachmentTextView.setText("Selected " + selectedFiles.size() + " tệp");
+                attachmentTextView.setText("Selected " + selectedFiles.size() + " files");
                 attachmentTextView.setVisibility(View.VISIBLE);
             } else if (data.getData() != null) {
                 Uri fileUri = data.getData();
-                selectedFiles.add(fileUri); // Lưu trữ Uri của tệp đã chọn
+                selectedFiles.add(fileUri); // Lưu trữ Uri của files đã chọn
                 String fileName = getFileName(fileUri);
                 selectedFileNames.add(fileName);
                 attachmentTextView.setText(fileName);
                 attachmentTextView.setVisibility(View.VISIBLE);
                 if(selectedFiles.size() > 1){
-                    attachmentTextView.setText("Selected " + selectedFiles.size() + " tệp");
+                    attachmentTextView.setText("Selected " + selectedFiles.size() + " files");
                     attachmentTextView.setVisibility(View.VISIBLE);
                 }
             }
         }
 
-        // Xử lý khi người dùng nhấp vào TextView để kiểm tra danh sách các tệp đã chọn
+        // Xử lý khi người dùng nhấp vào TextView để kiểm tra danh sách các files đã chọn
         attachmentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -427,7 +427,7 @@ public class CreateActivity extends AppCompatActivity {
         selectedFilesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Xử lý khi người dùng nhấp vào một tệp
+                // Xử lý khi người dùng nhấp vào một files
                 openSelectedFile(selectedFiles.get(position));
             }
         });
@@ -457,10 +457,10 @@ public class CreateActivity extends AppCompatActivity {
     }
 
 
-    // Cập nhật TextView sau khi xóa tệp khỏi danh sách
+    // Cập nhật TextView sau khi xóa files khỏi danh sách
     private void updateAttachmentTextView() {
         if (selectedFileNames.isEmpty()) {
-            attachmentTextView.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
+            attachmentTextView.setText(""); // Nếu không có files nào, xóa nội dung TextView
             attachmentTextView.setVisibility(View.INVISIBLE);
         } else {
             attachmentTextView.setText("Selected " + selectedFileNames.size() + " files");
@@ -469,7 +469,7 @@ public class CreateActivity extends AppCompatActivity {
 
 
 
-    // Phương thức để lấy tên tệp từ Uri
+    // Phương thức để lấy tên files từ Uri
     private String getFileName(Uri uri) {
         String result = null;
         Cursor cursor = null;
@@ -539,7 +539,7 @@ public class CreateActivity extends AppCompatActivity {
                     Uri fileUri = fileUris.get(position);
                     openSelectedFile(fileUris.get(position));
                     if (fileUri != null) {
-                        // Xử lý khi người dùng nhấp vào tên tệp để mở tệp
+                        // Xử lý khi người dùng nhấp vào tên files để mở files
                         try {
                             InputStream fileInputStream = context.getContentResolver().openInputStream(fileUri);
                             // Xử lý InputStream tại đây (ví dụ: đọc dữ liệu từ InputStream)
@@ -550,10 +550,10 @@ public class CreateActivity extends AppCompatActivity {
                             while ((line = reader.readLine()) != null) {
                                 stringBuilder.append(line).append("\n");
                             }
-                            // stringBuilder.toString() chứa nội dung của tệp, bạn có thể xử lý nó theo nhu cầu của mình
+                            // stringBuilder.toString() chứa nội dung của files, bạn có thể xử lý nó theo nhu cầu của mình
                         } catch (Exception e) {
                             e.printStackTrace();
-                            // Xử lý lỗi khi không thể mở tệp
+                            // Xử lý lỗi khi không thể mở files
                             // Ví dụ: Hiển thị thông báo lỗi cho người dùng
                         }
                     }
@@ -563,11 +563,11 @@ public class CreateActivity extends AppCompatActivity {
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Xử lý khi người dùng ấn nút X để xóa tệp
+                    // Xử lý khi người dùng ấn nút X để xóa files
                     fileNames.remove(position);
                     fileUris.remove(position); // Xóa Uri tương ứng
                     notifyDataSetChanged(); // Cập nhật danh sách
-                    updateAttachmentTextView(); // Cập nhật TextView sau khi xóa tệp
+                    updateAttachmentTextView(); // Cập nhật TextView sau khi xóa files
                 }
             });
 
