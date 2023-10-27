@@ -152,7 +152,7 @@ public class CreateActivity extends AppCompatActivity {
 
                 // Kiểm tra xem người dùng đã nhập đủ thông tin chưa
                 if (title.isEmpty() || topic.isEmpty() || startDate.isEmpty() || startTime.isEmpty() || endDate.isEmpty() || endTime.isEmpty() || category.isEmpty()) {
-                    Toast.makeText(CreateActivity.this, "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 } else {
                     // Lưu dữ liệu vào Firestore
                     saveDataToFirestore(title, topic, startDate, startTime, endDate, endTime, category);
@@ -196,9 +196,9 @@ public class CreateActivity extends AppCompatActivity {
                 customTagEditText.setText("");
                 // Ẩn câu chú thích
                 selectionPrompt.setVisibility(View.GONE);
-                Toast.makeText(CreateActivity.this, "Tag đã được thêm vào Spinner.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateActivity.this, "Tag was added to Spinner", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(CreateActivity.this, "Vui lòng nhập tag trước khi nhấn OK.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateActivity.this, "Please input your tag before clicking OK", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -370,18 +370,18 @@ public class CreateActivity extends AppCompatActivity {
                                 })
                                 .addOnFailureListener(e -> {
                                     // Xử lý khi tệp đính kèm không thể được tải lên Firebase Storage
-                                    Toast.makeText(CreateActivity.this, "Lỗi khi tải tệp lên Firebase Storage: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CreateActivity.this, "Fail to update files to Firebase Storage: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     }
 
                     // Xử lý khi dữ liệu được lưu thành công
                     PopulateList.UpdateL(db,CreateActivity.this);
-                    Toast.makeText(CreateActivity.this, "Dữ liệu và tệp đính kèm đã được lưu thành công.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateActivity.this, "Data was successfully created", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý khi dữ liệu không thể được lưu vào Firestore
                     PopulateList.UpdateL(db,CreateActivity.this);
-                    Toast.makeText(CreateActivity.this, "Lỗi khi lưu dữ liệu vào Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateActivity.this, "Fail to update data to Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 //    private void saveAttachmentInfoToFirestore(String name, String fileName, String fileUrl) {
@@ -424,7 +424,7 @@ public class CreateActivity extends AppCompatActivity {
                     selectedFiles.add(fileUri); // Lưu trữ Uri của tệp đã chọn
                     selectedFileNames.add(getFileName(fileUri));
                 }
-                attachmentTextView.setText("Đã chọn " + selectedFiles.size() + " tệp");
+                attachmentTextView.setText("Selected " + selectedFiles.size() + " tệp");
                 attachmentTextView.setVisibility(View.VISIBLE);
             } else if (data.getData() != null) {
                 Uri fileUri = data.getData();
@@ -434,7 +434,7 @@ public class CreateActivity extends AppCompatActivity {
                 attachmentTextView.setText(fileName);
                 attachmentTextView.setVisibility(View.VISIBLE);
                 if(selectedFiles.size() > 1){
-                    attachmentTextView.setText("Đã chọn " + selectedFiles.size() + " tệp");
+                    attachmentTextView.setText("Selected " + selectedFiles.size() + " tệp");
                     attachmentTextView.setVisibility(View.VISIBLE);
                 }
             }
@@ -454,7 +454,7 @@ public class CreateActivity extends AppCompatActivity {
 
     private void showSelectedFileList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Danh sách các tệp đã chọn");
+        builder.setTitle("List of files selected");
 
         View selectedFilesView = getLayoutInflater().inflate(R.layout.selected_files_list, null);
         ListView selectedFilesListView = selectedFilesView.findViewById(R.id.selectedFilesListView);
@@ -490,7 +490,7 @@ public class CreateActivity extends AppCompatActivity {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(CreateActivity.this, "Không có ứng dụng nào có thể mở file này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateActivity.this, "Not any application to open this file", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -501,7 +501,7 @@ public class CreateActivity extends AppCompatActivity {
             attachmentTextView.setText(""); // Nếu không có tệp nào, xóa nội dung TextView
             attachmentTextView.setVisibility(View.INVISIBLE);
         } else {
-            attachmentTextView.setText("Đã chọn " + selectedFileNames.size() + " tệp");
+            attachmentTextView.setText("Selected " + selectedFileNames.size() + " files");
         }
     }
 

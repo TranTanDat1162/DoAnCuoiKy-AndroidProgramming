@@ -56,7 +56,7 @@
                 android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tạo tiêu đề:"
+                android:text="Topic"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
                 android:background="@drawable/vien"
                 android:contentDescription="Tiêu đề"
                 android:gravity="top"
-                android:hint="Tiêu đề"
+                android:hint="Topic"
                 android:inputType="textMultiLine"
                 android:maxLines="2"
                 android:scrollbars="vertical"
@@ -78,7 +78,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tạo đề bài:"
+                android:text="Task"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -91,7 +91,7 @@
                 android:background="@drawable/vien"
                 android:contentDescription="Nhập đề bài"
                 android:gravity="top"
-                android:hint="Nhập đề bài vào đây/ hoặc đính kèm file bài làm ở nút bên dưới"
+                android:hint="Please fill your task/ or you can attach your file below"
                 android:inputType="textMultiLine"
                 android:maxLines="3"
                 android:scrollbars="vertical"
@@ -114,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="Đính kèm file"
+                    android:hint="File attachment"
                     android:visibility="visible" />
             </LinearLayout>
 
@@ -127,7 +127,7 @@
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ngày và thời gian bắt đầu:"
+                    android:text="Date start"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -175,7 +175,7 @@
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ngày và thời gian kết thúc:"
+                    android:text="Date end"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -213,6 +213,14 @@
                         android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/tagSpinner"
@@ -261,5 +269,5 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginTop="10dp"
-        android:text="Done" />
+        android:text="Update" />
 </LinearLayout>
