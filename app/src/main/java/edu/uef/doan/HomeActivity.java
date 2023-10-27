@@ -1,13 +1,7 @@
 package edu.uef.doan;
 
-import static java.security.AccessController.getContext;
-import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.mList;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
+import static edu.uef.doan.LoginActivity.user;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -15,18 +9,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -36,16 +33,11 @@ import org.joda.time.DateTimeComparator;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
-    private ListView lv;
     private  TextView userName;
     private ViewPager viewPager;
     private TabLayout tabLayout;

@@ -1,7 +1,5 @@
 package edu.uef.doan;
 
-import static android.content.ContentValues.TAG;
-import static edu.uef.doan.LoginActivity.storage;
 import static edu.uef.doan.LoginActivity.user;
 import static edu.uef.doan.LoginActivity.userDocument;
 import static edu.uef.doan.SignupActivity.sdf3;
@@ -47,14 +45,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 
@@ -71,9 +69,7 @@ public class CreateActivity extends AppCompatActivity {
     private List<String> tags;
     private ArrayAdapter<String> tagAdapter;
     private static final int PICK_FILES_REQUEST_CODE = 1;
-    private static final int OPEN_FILE_REQUEST_CODE = 2;
     AppCompatButton btn1;
-    private Uri selectedFUri;
     private ImageButton attachmentButton,return_btn;
     private TextView attachmentTextView;
     // Khai báo biến cho Firestore
@@ -202,15 +198,6 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-//        btn1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(CreateActivity.this,"Tao bai thanh cong " ,Toast.LENGTH_SHORT).show();
-//
-//                Intent intent=new Intent(CreateActivity.this,HomeActivity.class);
-//                startActivity(intent);
-//            }
-//        });
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,27 +230,24 @@ public class CreateActivity extends AppCompatActivity {
 
 
 // Thời gian bắt đầu
-        startTimePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this,
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                startDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                startDateTime.set(Calendar.MINUTE, minute);
-                                if (startDateTime.before(Calendar.getInstance())) {
-                                    // Nếu thời gian bắt đầu trước thời gian hiện tại, thiết lập thời gian bắt đầu là thời gian hiện tại
-                                    startDateTime = Calendar.getInstance();
-                                }
-                                displayStartTimeTextView.setText(startDateTime.get(Calendar.HOUR_OF_DAY) + ":" + startDateTime.get(Calendar.MINUTE));
+        startTimePickerButton.setOnClickListener(v -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this,
+                    new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            startDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            startDateTime.set(Calendar.MINUTE, minute);
+                            if (startDateTime.before(Calendar.getInstance())) {
+                                // Nếu thời gian bắt đầu trước thời gian hiện tại, thiết lập thời gian bắt đầu là thời gian hiện tại
+                                startDateTime = Calendar.getInstance();
                             }
-                        },
-                        startDateTime.get(Calendar.HOUR_OF_DAY),
-                        startDateTime.get(Calendar.MINUTE),
-                        true);
-                timePickerDialog.show();
-            }
+                            displayStartTimeTextView.setText(startDateTime.get(Calendar.HOUR_OF_DAY) + ":" + startDateTime.get(Calendar.MINUTE));
+                        }
+                    },
+                    startDateTime.get(Calendar.HOUR_OF_DAY),
+                    startDateTime.get(Calendar.MINUTE),
+                    true);
+            timePickerDialog.show();
         });
 
 
@@ -384,26 +368,6 @@ public class CreateActivity extends AppCompatActivity {
                     Toast.makeText(CreateActivity.this, "Fail to update data to Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-//    private void saveAttachmentInfoToFirestore(String name, String fileName, String fileUrl) {
-//        String id = userDocument.getId();
-//        db.collection("users").document(id).set(user);
-//        // Tạo một Map chứa thông tin về tệp đính kèm
-//        Map<String, Object> attachmentInfo = new HashMap<>();
-//        attachmentInfo.put("fileName", fileName);
-//        attachmentInfo.put("fileUrl", fileUrl);
-//
-//        // Lưu thông tin tệp đính kèm vào Firestore trong bảng "attachments"
-//        db.collection("users").document(id).collection("assignment")
-//                .add(attachmentInfo)
-//                .addOnSuccessListener(documentReference -> {
-//                    // Xử lý khi thông tin tệp đính kèm được lưu thành công
-//                    Log.d(TAG, "Tệp đính kèm được lưu thành công: " + documentReference.getId());
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Xử lý khi thông tin tệp đính kèm không thể được lưu vào Firestore
-//                    Log.w(TAG, "Lỗi khi lưu thông tin tệp đính kèm vào Firestore", e);
-//                });
-//    }
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
