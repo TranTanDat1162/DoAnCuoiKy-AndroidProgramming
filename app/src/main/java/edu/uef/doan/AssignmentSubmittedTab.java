@@ -98,7 +98,7 @@ public class AssignmentSubmittedTab extends Fragment {
             AssignmentList assignments = (AssignmentList) obj;
             Assignment assignment = assignments.getAssignment();
             if(((AssignmentList) obj).getAssignment().getSubmitTime() != null) {
-                RowItem item = new RowItem(assignment.getTopic(),assignment.getSubmitTime(),assignment.getAnswer());
+                RowItem item = new RowItem(assignment.getTitle(),assignment.getSubmitTime(),assignment.getAnswer());
                 AssignmentTabList.add(i);
                 item.setType(assignment.getCategory());
                 rowItems.add(item);
