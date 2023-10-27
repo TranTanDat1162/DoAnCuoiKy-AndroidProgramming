@@ -70,9 +70,9 @@ public class UserActivity extends AppCompatActivity {
         //Initialize variables
         initializeVar();
 
-        if (user.getFullname() != null) fullName.setHint(user.getFullname());
-        if (user.getEmail() != null) email.setHint(user.getEmail());
-        if (user.getPhone() != null) phoneNumber.setHint(user.getPhone());
+        if (user.getFullname() != null) fullName.setText(user.getFullname());
+        if (user.getEmail() != null) email.setText(user.getEmail());
+        if (user.getPhone() != null) phoneNumber.setText(user.getPhone());
 
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
